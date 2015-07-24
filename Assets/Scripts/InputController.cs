@@ -13,8 +13,8 @@ public class InputController : MonoBehaviour {
     void Start () {
         cuiv = new CenterUIView();
         cuiv.centerUIViewPresenter = FindObjectOfType<CenterUIViewPresenter>();
-        entityController.CreateUnit( testUnit, EntityController.Faction.Blue );
-        entityController.CreateUnit( testUnit2, EntityController.Faction.Red );
+        //entityController.CreateUnit( testUnit, EntityController.Faction.Blue );
+        //entityController.CreateUnit( testUnit2, EntityController.Faction.Red );
     }
 
     void Update () {

@@ -22,7 +22,7 @@ public class CoroutineManager : MonoBehaviour {
     private IEnumerator InvokeRepeatingMethod ( BoolMethodToCall method, float waitTime, float repeatRate ) {
         yield return new WaitForSeconds( waitTime );
         method();
-        yield return new WaitForSeconds( repeatRate );
+
         while ( true ) {
             yield return new WaitForSeconds( repeatRate );
             method();
@@ -35,12 +35,7 @@ public class CoroutineManager : MonoBehaviour {
     }
 
     public void StopInvoke ( UnityEngine.Object startedIEnumerator ) {
-        //Debug.Log( "StopInvoke" );
         StopCoroutine( (IEnumerator)startedIEnumerator );
-    }
-
-    public void StopAllCoroutines () {
-        base.StopAllCoroutines();
     }
 
 }

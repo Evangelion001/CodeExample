@@ -59,7 +59,6 @@ public class EntityController : MonoBehaviour {
         }
 
         if ( unitsControllersSelectedBlue != null ) {
-            Debug.Log( "unselect" );
             foreach ( var key in unitsControllersSelectedBlue ) {
                 key.Unselected();
             }

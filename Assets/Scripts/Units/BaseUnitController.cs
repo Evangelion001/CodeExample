@@ -30,6 +30,7 @@ public class BaseUnitController {
     }
 
     public virtual void Unselected () {
+        Debug.Log( "Unselected: " );
         baseUnitView.HideSelectedEffect();
     }
 

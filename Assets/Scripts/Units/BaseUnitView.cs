@@ -10,7 +10,7 @@ public class BaseUnitView {
     }
 
     public void HideSelectedEffect () {
-        unitViewPresenter.ShowCircle();
+        unitViewPresenter.HideCircle();
     }
 
     public UnitViewPresenter GetUnitViewPresenter () {

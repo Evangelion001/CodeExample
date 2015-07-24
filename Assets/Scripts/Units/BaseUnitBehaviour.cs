@@ -10,7 +10,7 @@ public class BaseUnitBehaviour {
     private Vector3 targetPosition;
     private EntityController.GetTarget GetTargetDelegate;
     private EntityController.Faction myFaction;
-    private TestStateMachine fsm;
+    private FiniteStateMachine fsm;
 
     //private StateMachine<State, Trigger> fsm = new StateMachine<State, Trigger>( State.Empty );
 
@@ -24,46 +24,46 @@ public class BaseUnitBehaviour {
 
     private void InitStateMachine () {
 
-        fsm = new TestStateMachine();
+        fsm = new FiniteStateMachine();
 
-        fsm.SetStatePermit( TestStateMachine.States.Empty, TestStateMachine.Events.Start, TestStateMachine.States.Idle );
+        fsm.SetStatePermit( FiniteStateMachine.States.Empty, FiniteStateMachine.Events.Start, FiniteStateMachine.States.Idle );
 
-        fsm.SetStateEntery( TestStateMachine.States.Path, StartMove );
-        fsm.AddStateUpdate( TestStateMachine.States.Path, UpdateFindGroundPosition, 0.1f );
-        fsm.SetStatePermit( TestStateMachine.States.Path, TestStateMachine.Events.TargetApproached, TestStateMachine.States.Idle );
-        fsm.SetStateExit( TestStateMachine.States.Path, StopMoving );
+        fsm.SetStateEntery( FiniteStateMachine.States.Path, StartMove );
+        fsm.AddStateUpdate( FiniteStateMachine.States.Path, UpdateFindGroundPosition, 0.1f );
+        fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Idle );
+        fsm.SetStateExit( FiniteStateMachine.States.Path, StopMoving );
 
-        fsm.SetStateEntery( TestStateMachine.States.Idle, StartIdle );
-        fsm.AddStateUpdate( TestStateMachine.States.Idle, UpdateFindTarget, 0.5f );
-        fsm.SetStatePermit( TestStateMachine.States.Idle, TestStateMachine.Events.GoToPosition, TestStateMachine.States.Path );
-        fsm.SetStatePermit( TestStateMachine.States.Idle, TestStateMachine.Events.TargetFound, TestStateMachine.States.FollowTarget );
-        fsm.SetStatePermit( TestStateMachine.States.Idle, TestStateMachine.Events.Dead, TestStateMachine.States.Dead );
-        fsm.SetStateExit( TestStateMachine.States.Idle, StopMoving );
+        fsm.SetStateEntery( FiniteStateMachine.States.Idle, StartIdle );
+        fsm.AddStateUpdate( FiniteStateMachine.States.Idle, UpdateFindTarget, 0.5f );
+        fsm.SetStatePermit( FiniteStateMachine.States.Idle, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
+        fsm.SetStatePermit( FiniteStateMachine.States.Idle, FiniteStateMachine.Events.TargetFound, FiniteStateMachine.States.FollowTarget );
+        fsm.SetStatePermit( FiniteStateMachine.States.Idle, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
+        fsm.SetStateExit( FiniteStateMachine.States.Idle, StopMoving );
 
-        fsm.SetStateEntery( TestStateMachine.States.FollowTarget, StartFollowTarget );
-        fsm.AddStateUpdate( TestStateMachine.States.FollowTarget, UpdateFindTarget, 0.5f );
-        fsm.AddStateUpdate( TestStateMachine.States.FollowTarget, UpdateFollowTarget, 0.1f );
-        fsm.SetStatePermit( TestStateMachine.States.FollowTarget, TestStateMachine.Events.GoToPosition, TestStateMachine.States.Path );
-        fsm.SetStatePermit( TestStateMachine.States.FollowTarget, TestStateMachine.Events.TargetApproached, TestStateMachine.States.Action );
-        fsm.SetStatePermit( TestStateMachine.States.FollowTarget, TestStateMachine.Events.Dead, TestStateMachine.States.Dead );
-        fsm.SetStateExit( TestStateMachine.States.FollowTarget, StopMoving );
+        fsm.SetStateEntery( FiniteStateMachine.States.FollowTarget, StartFollowTarget );
+        fsm.AddStateUpdate( FiniteStateMachine.States.FollowTarget, UpdateFindTarget, 0.5f );
+        fsm.AddStateUpdate( FiniteStateMachine.States.FollowTarget, UpdateFollowTarget, 0.1f );
+        fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
+        fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Action );
+        fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
+        fsm.SetStateExit( FiniteStateMachine.States.FollowTarget, StopMoving );
 
-        fsm.SetStateEntery( TestStateMachine.States.Action, StartAttack );
-        fsm.AddStateUpdate( TestStateMachine.States.Action, UpdateAttack, 0.1f );
-        fsm.SetStatePermit( TestStateMachine.States.Action, TestStateMachine.Events.GoToPosition, TestStateMachine.States.Path );
-        fsm.SetStatePermit( TestStateMachine.States.Action, TestStateMachine.Events.TargetLost, TestStateMachine.States.Idle );
-        fsm.SetStatePermit( TestStateMachine.States.Action, TestStateMachine.Events.Dead, TestStateMachine.States.Dead );
-        fsm.SetStateExit( TestStateMachine.States.Action, StopMoving );
+        fsm.SetStateEntery( FiniteStateMachine.States.Action, StartAttack );
+        fsm.AddStateUpdate( FiniteStateMachine.States.Action, UpdateAttack, 0.1f );
+        fsm.SetStatePermit( FiniteStateMachine.States.Action, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
+        fsm.SetStatePermit( FiniteStateMachine.States.Action, FiniteStateMachine.Events.TargetLost, FiniteStateMachine.States.Idle );
+        fsm.SetStatePermit( FiniteStateMachine.States.Action, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
+        fsm.SetStateExit( FiniteStateMachine.States.Action, StopMoving );
 
-        fsm.SetStateEntery( TestStateMachine.States.Dead, OnDeadEnter );
+        fsm.SetStateEntery( FiniteStateMachine.States.Dead, OnDeadEnter );
 
-        fsm.CallEvent( TestStateMachine.Events.Start );
+        fsm.CallEvent( FiniteStateMachine.Events.Start );
     }
 
     public void SetTargetPosition (Vector3 targetPosition ) {
         this.targetPosition = targetPosition;
         //fsm.Fire( Trigger.GoToPosition );
-        fsm.CallEvent( TestStateMachine.Events.GoToPosition );
+        fsm.CallEvent( FiniteStateMachine.Events.GoToPosition );
     }
 
     private void StartMove () {
@@ -77,7 +77,7 @@ public class BaseUnitBehaviour {
         if ( tempTarget != targetViewPresenter ) {
             targetViewPresenter = tempTarget;
             if ( targetViewPresenter != null ) {
-                fsm.CallEvent( TestStateMachine.Events.TargetFound );
+                fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
                 //fsm.Fire( Trigger.TargetFound );
             }
         }
@@ -87,7 +87,7 @@ public class BaseUnitBehaviour {
     private void UpdateFindGroundPosition () {
 
         if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= 0.1f ) {
-            fsm.CallEvent( TestStateMachine.Events.TargetApproached );
+            fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
             //fsm.Fire( Trigger.TargetApproached );
         }
 
@@ -99,8 +99,8 @@ public class BaseUnitBehaviour {
 
     private void UpdateFollowTarget () {
 
-        if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= 2f ) {
-            fsm.CallEvent( TestStateMachine.Events.TargetApproached );
+        if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= 3f ) {
+            fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
             //fsm.Fire( Trigger.TargetApproached );
             return;
         }
@@ -127,8 +127,8 @@ public class BaseUnitBehaviour {
 
     private void UpdateAttack () {
 
-        if ( Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > 2f ) {
-            fsm.CallEvent( TestStateMachine.Events.TargetLost );
+        if ( Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > 3f ) {
+            fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             //fsm.Fire( Trigger.TargetLost );
             return;
         }
