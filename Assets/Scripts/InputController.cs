@@ -11,13 +11,21 @@ public class InputController : MonoBehaviour {
 
     private BuildView[] buildView;
 
+    private EntityController entityController;
+
     void Start () {
         cuiv = new CenterUIView();
         cuiv.centerUIViewPresenter = FindObjectOfType<CenterUIViewPresenter>();
+
+        entityController = new EntityController();
         spawn = new Spawn( entityController );
+
         buildView = FindObjectsOfType<BuildView>();
-        spawn.CreateUnitByType( buildView[0].spawnUnitType, buildView[0].spawnPosition.transform.position, buildView[0].GetUnit() );
-        spawn.CreateUnitByType( buildView[1].spawnUnitType, buildView[1].spawnPosition.transform.position, buildView[1].GetUnit() );
+
+        foreach ( var key in buildView ) {
+            spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit() );
+        }
+
     }
 
     void Update () {
@@ -25,8 +33,6 @@ public class InputController : MonoBehaviour {
             MoveAtClickedPosition();
         }
     }
-
-    public EntityController entityController;
 
     private void MoveAtClickedPosition () {
         Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );

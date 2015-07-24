@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
-public class EntityController : MonoBehaviour {
+public class EntityController {
 
     public delegate void Select ( BaseUnitController selectedUnit );
 
@@ -13,70 +13,69 @@ public class EntityController : MonoBehaviour {
 
     public delegate UnitViewPresenter GetTarget ( Faction myFaction );
 
+    //FIXME select nearest target
     private UnitViewPresenter GetUnitTarget(Faction myFaction) {
+
         if ( myFaction == Faction.Blue ) {
-            return unitsControllersRed[0].GetUnitViewPresenter();
+            if ( unitsControllersRed.Count > 0 ) {
+                return unitsControllersRed[0].GetUnitViewPresenter();
+            }
         } else {
-            return unitsControllersBlue[0].GetUnitViewPresenter();
+            if ( unitsControllersBlue.Count > 0 ) {
+                return unitsControllersBlue[0].GetUnitViewPresenter();
+            }
         }
+        return null;
     }
 
-    private BaseUnitController[] unitsControllersRed;
-    private BaseUnitController[] unitsControllersBlue;
+    private List<BaseUnitController> unitsControllersRed;
+    private List<BaseUnitController> unitsControllersBlue;
 
-    private BaseUnitController[] unitsControllersSelectedRed;
-    private BaseUnitController[] unitsControllersSelectedBlue;
+    private List<BaseUnitController> unitsControllersSelectedRed;
+    private List<BaseUnitController> unitsControllersSelectedBlue;
+
+    public EntityController () {
+        unitsControllersBlue = new List<BaseUnitController>();
+        unitsControllersRed = new List<BaseUnitController>();
+        unitsControllersSelectedRed = new List<BaseUnitController>();
+        unitsControllersSelectedBlue = new List<BaseUnitController>();
+    }
 
     public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics ) {
 
-        if ( unitsControllersBlue == null ) {
-            unitsControllersBlue = new BaseUnitController[1];
-        }
-        if ( unitsControllersRed == null ) {
-            unitsControllersRed = new BaseUnitController[1];
-        }
+        BaseUnitController tempBaseUnitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget );
 
         if ( unitCharacteristics.faction == Faction.Blue ) {
-            unitCharacteristics.faction = Faction.Blue;
-            unitsControllersBlue[0] = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget );
+            unitsControllersBlue.Add( tempBaseUnitController );
         } else {
-            unitCharacteristics.faction = Faction.Red;
-            unitsControllersRed[0] = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget );
+            unitsControllersRed.Add( tempBaseUnitController );
         }
 
     }
 
     public void UnselectUints () {
-        if ( unitsControllersSelectedRed != null ) {
-            foreach ( var key in unitsControllersSelectedRed ) {
-                key.Unselected();
-            }
-            unitsControllersSelectedRed = new BaseUnitController[0];
-        }
 
-        if ( unitsControllersSelectedBlue != null ) {
-            foreach ( var key in unitsControllersSelectedBlue ) {
-                key.Unselected();
-            }
-            unitsControllersSelectedBlue = new BaseUnitController[0];
+        foreach ( var key in unitsControllersSelectedRed ) {
+            key.Unselected();
         }
+        unitsControllersSelectedRed.Clear();
+
+        foreach ( var key in unitsControllersSelectedBlue ) {
+            key.Unselected();
+        }
+        unitsControllersSelectedBlue.Clear();
+
     }
 
     public void MoveToPosition (Vector3 position) {
-        if ( unitsControllersSelectedBlue != null ) {
-            foreach ( var key in unitsControllersSelectedBlue ) {
-                key.MoveToPosition( position );
-            }
-        } else {
-            Debug.Log( "Not have selected units!" );
+        foreach ( var key in unitsControllersSelectedBlue ) {
+            key.MoveToPosition( position );
         }
     }
 
     private void SelectUnit (BaseUnitController selectedUnit) {
-        if ( unitsControllersSelectedBlue == null || unitsControllersSelectedBlue.Length == 0 ) {
-            unitsControllersSelectedBlue = new BaseUnitController[1];
-        }
-        unitsControllersSelectedBlue[0] = selectedUnit;
+        unitsControllersSelectedBlue.Clear();
+        unitsControllersSelectedBlue.Add(selectedUnit);
         Debug.Log( "SelectUnit" );
     }
 

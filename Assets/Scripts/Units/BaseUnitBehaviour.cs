@@ -31,6 +31,7 @@ public class BaseUnitBehaviour {
         fsm.SetStateEntery( FiniteStateMachine.States.Path, StartMove );
         fsm.AddStateUpdate( FiniteStateMachine.States.Path, UpdateFindGroundPosition, 0.1f );
         fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Idle );
+        fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
         fsm.SetStateExit( FiniteStateMachine.States.Path, StopMoving );
 
         fsm.SetStateEntery( FiniteStateMachine.States.Idle, StartIdle );
@@ -53,7 +54,7 @@ public class BaseUnitBehaviour {
         fsm.SetStatePermit( FiniteStateMachine.States.Action, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
         fsm.SetStatePermit( FiniteStateMachine.States.Action, FiniteStateMachine.Events.TargetLost, FiniteStateMachine.States.Idle );
         fsm.SetStatePermit( FiniteStateMachine.States.Action, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
-        fsm.SetStateExit( FiniteStateMachine.States.Action, StopMoving );
+        fsm.SetStateExit( FiniteStateMachine.States.Action, StopAttack );
 
         fsm.SetStateEntery( FiniteStateMachine.States.Dead, OnDeadEnter );
 
@@ -126,7 +127,6 @@ public class BaseUnitBehaviour {
     }
 
     private void UpdateAttack () {
-
         if ( Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > 3f ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             //fsm.Fire( Trigger.TargetLost );
