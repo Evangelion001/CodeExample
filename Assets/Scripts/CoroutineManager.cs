@@ -7,24 +7,22 @@ public class CoroutineManager : MonoBehaviour {
 
     public delegate void BoolMethodToCall ();
 
-    public delegate void KillCorutineDelegate();
-
-    private Dictionary<int,IEnumerator> currentCoroutines;
+    private Dictionary<int,IEnumerator> currentCoroutines = new Dictionary<int, IEnumerator>();
 
     private int counter = 0;
 
     public int InvokeRepeating ( BoolMethodToCall method, float waitTime, float repeatRate ) {
-        IEnumerator tempIEnumerator = InvokeRepeatingMethod( method, waitTime, repeatRate );
-        StartCoroutine( tempIEnumerator );
-        currentCoroutines.Add( counter, tempIEnumerator );
         ++counter;
+        IEnumerator tempIEnumerator = InvokeRepeatingMethod( method, waitTime, repeatRate );
+        currentCoroutines.Add( counter, tempIEnumerator );
+        StartCoroutine( tempIEnumerator );
         return counter;
     }
 
     private IEnumerator InvokeRepeatingMethod ( BoolMethodToCall method, float waitTime, float repeatRate ) {
         yield return new WaitForSeconds( waitTime );
         method();
-
+        yield return new WaitForSeconds( repeatRate );
         while ( true ) {
             yield return new WaitForSeconds( repeatRate );
             method();
@@ -41,8 +39,8 @@ public class CoroutineManager : MonoBehaviour {
         StopCoroutine( (IEnumerator)startedIEnumerator );
     }
 
-    public void StopInvoke () {
-        StopAllCoroutines();
+    public void StopAllCoroutines () {
+        base.StopAllCoroutines();
     }
 
 }

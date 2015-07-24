@@ -10,19 +10,16 @@ public class BaseUnitController {
     private BaseUnitView baseUnitView;
     private BaseUnit baseUnitModel;
     private BaseUnitBehaviour baseUnitBehaviour;
-    private UnitViewPresenter unitViewPresenter;
 
     public UnitViewPresenter GetUnitViewPresenter () {
-        return unitViewPresenter;
+        return baseUnitView.GetUnitViewPresenter();
     }
 
     public BaseUnitController (EntityController.Select entityControllerSelect, UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, EntityController.GetTarget getTarget ) {
 
         this.entityControllerSelect = entityControllerSelect;
-        this.unitViewPresenter = unitViewPresenter;
         baseUnitModel = new BaseUnit( "Unit", unitCharacteristics );
-        baseUnitBehaviour = unitViewPresenter.baseUnitBehaviour;
-        baseUnitBehaviour.Init( unitViewPresenter.navMeshAgent, getTarget, GetFaction() );
+        baseUnitBehaviour = new BaseUnitBehaviour( unitViewPresenter.navMeshAgent, getTarget, GetFaction(), unitViewPresenter );
         baseUnitView = new BaseUnitView( unitViewPresenter, Selected, baseUnitModel.GetDamage );
 
     }
@@ -47,6 +44,5 @@ public class BaseUnitController {
     //public virtual void Attack (BaseUnit unit) {
     //    unit.GetDamage();
     //}
-
 
 }

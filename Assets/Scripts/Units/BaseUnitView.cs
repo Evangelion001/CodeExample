@@ -13,6 +13,10 @@ public class BaseUnitView {
         unitViewPresenter.ShowCircle();
     }
 
+    public UnitViewPresenter GetUnitViewPresenter () {
+        return unitViewPresenter;
+    }
+
     public BaseUnitView ( UnitViewPresenter unitViewPresenter, BaseUnitController.SelectUnit selectUnit, BaseUnit.DamageDelegate damageDelegate ) {
         this.unitViewPresenter = unitViewPresenter;
         unitViewPresenter.AddSelectDelegate( selectUnit );
