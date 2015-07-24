@@ -27,8 +27,7 @@ public class EntityController : MonoBehaviour {
     private BaseUnitController[] unitsControllersSelectedRed;
     private BaseUnitController[] unitsControllersSelectedBlue;
 
-    public void CreateUnit (GameObject unit, Faction faction ) {
-        //FIXME get paramets from Baraks;
+    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics ) {
 
         if ( unitsControllersBlue == null ) {
             unitsControllersBlue = new BaseUnitController[1];
@@ -36,16 +35,13 @@ public class EntityController : MonoBehaviour {
         if ( unitsControllersRed == null ) {
             unitsControllersRed = new BaseUnitController[1];
         }
-        //FIXME get unitCharacteristics from config
-        BaseUnit.UnitCharacteristics unitCharacteristics = new BaseUnit.UnitCharacteristics();
-        unitCharacteristics.attack = 10;
 
-        if ( faction == Faction.Blue ) {
+        if ( unitCharacteristics.faction == Faction.Blue ) {
             unitCharacteristics.faction = Faction.Blue;
-            unitsControllersBlue[0] = new BaseUnitController( SelectUnit, unit.GetComponent<UnitViewPresenter>(), unitCharacteristics, GetUnitTarget );
+            unitsControllersBlue[0] = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget );
         } else {
             unitCharacteristics.faction = Faction.Red;
-            unitsControllersRed[0] = new BaseUnitController( SelectUnit, unit.GetComponent<UnitViewPresenter>(), unitCharacteristics, GetUnitTarget );
+            unitsControllersRed[0] = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget );
         }
 
     }

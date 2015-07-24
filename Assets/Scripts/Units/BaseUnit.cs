@@ -2,6 +2,12 @@
 
 public class BaseUnit : IUnit {
 
+    public enum UnitType {
+        swordman,
+        archer,
+        hero
+    }
+
     public delegate void DamageDelegate (Damage damage);
 
     public EntityController.Faction GetFaction() {

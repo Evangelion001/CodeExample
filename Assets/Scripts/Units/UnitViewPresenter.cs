@@ -5,6 +5,7 @@ public class UnitViewPresenter : MonoBehaviour {
     public GameObject selectCircle;
     public NavMeshAgent navMeshAgent;
     public BaseUnitBehaviour baseUnitBehaviour;
+    public BaseUnit.UnitType unityType;
 
     private  BaseUnitController.SelectUnit selectUnit;
     private BaseUnit.DamageDelegate damageDelegate;

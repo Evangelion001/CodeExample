@@ -62,6 +62,11 @@
      <Compile Include="Assets\Lib\Stateless\TransitioningTriggerBehaviour.cs" />
      <Compile Include="Assets\Lib\Stateless\TriggerBehaviour.cs" />
      <Compile Include="Assets\Lib\Stateless\TriggerWithParameters.cs" />
+     <Compile Include="Assets\Scripts\Buildings\BuildController.cs" />
+     <Compile Include="Assets\Scripts\Buildings\BuildModel.cs" />
+     <Compile Include="Assets\Scripts\Buildings\BuildView.cs" />
+     <Compile Include="Assets\Scripts\Buildings\ReadOnly.cs" />
+     <Compile Include="Assets\Scripts\Buildings\ReadOnlyAttribute.cs" />
      <Compile Include="Assets\Scripts\CoroutineManager.cs" />
      <Compile Include="Assets\Scripts\CreepAI.cs" />
      <Compile Include="Assets\Scripts\Damage.cs" />
@@ -72,6 +77,7 @@
      <Compile Include="Assets\Scripts\InputController.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
      <Compile Include="Assets\Scripts\Singleton.cs" />
+     <Compile Include="Assets\Scripts\Spawn.cs" />
      <Compile Include="Assets\Scripts\Test.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnit.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitBehaviour.cs" />

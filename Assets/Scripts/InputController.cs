@@ -5,26 +5,25 @@ public class InputController : MonoBehaviour {
 
     public GameObject tagret;
 
-    public GameObject testUnit;
-    public GameObject testUnit2;
-
     private CenterUIView cuiv;
+
+    private Spawn spawn;
+
+    private BuildView[] buildView;
 
     void Start () {
         cuiv = new CenterUIView();
         cuiv.centerUIViewPresenter = FindObjectOfType<CenterUIViewPresenter>();
-        //entityController.CreateUnit( testUnit, EntityController.Faction.Blue );
-        //entityController.CreateUnit( testUnit2, EntityController.Faction.Red );
+        spawn = new Spawn( entityController );
+        buildView = FindObjectsOfType<BuildView>();
+        spawn.CreateUnitByType( buildView[0].spawnUnitType, buildView[0].spawnPosition.transform.position, buildView[0].GetUnit() );
+        spawn.CreateUnitByType( buildView[1].spawnUnitType, buildView[1].spawnPosition.transform.position, buildView[1].GetUnit() );
     }
 
     void Update () {
         if ( Input.GetMouseButtonDown( 0 ) ) {
             MoveAtClickedPosition();
         }
-    }
-
-    void LateUpdate () {
-
     }
 
     public EntityController entityController;
