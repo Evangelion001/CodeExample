@@ -13,31 +13,26 @@ public class EntityController {
 
     public delegate UnitViewPresenter GetTarget ( Faction myFaction, UnitViewPresenter unit);
 
-    //FIXME select nearest target
     private UnitViewPresenter GetUnitTarget(Faction myFaction, UnitViewPresenter unit ) {
 
         float distance = 0;
 
         UnitViewPresenter resUnitViewPresenter = null;
 
+        List<BaseUnitController> tempBaseUnitControllers = new List<BaseUnitController>();
+
         if ( myFaction == Faction.Blue ) {
-            if ( unitsControllersRed.Count > 0 ) {
-                foreach ( var key in unitsControllersRed ) {
-                   float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
-                    if ( resUnitViewPresenter == null || tempDistance < distance ) {
-                        resUnitViewPresenter = key.GetUnitViewPresenter();
-                        distance = tempDistance;
-                    }
-                }
-            }
+            tempBaseUnitControllers = unitsControllersRed;
         } else {
-            if ( unitsControllersBlue.Count > 0 ) {
-                foreach ( var key in unitsControllersBlue ) {
-                    float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
-                    if ( resUnitViewPresenter == null || tempDistance < distance ) {
-                        resUnitViewPresenter = key.GetUnitViewPresenter();
-                        distance = tempDistance;
-                    }
+            tempBaseUnitControllers = unitsControllersBlue;
+        }
+
+        if ( tempBaseUnitControllers.Count > 0 ) {
+            foreach ( var key in tempBaseUnitControllers ) {
+                float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
+                if ( resUnitViewPresenter == null || tempDistance < distance ) {
+                    resUnitViewPresenter = key.GetUnitViewPresenter();
+                    distance = tempDistance;
                 }
             }
         }

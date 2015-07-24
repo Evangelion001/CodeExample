@@ -67,6 +67,7 @@
      <Compile Include="Assets\Scripts\Buildings\BuildView.cs" />
      <Compile Include="Assets\Scripts\Buildings\ReadOnly.cs" />
      <Compile Include="Assets\Scripts\Buildings\ReadOnlyAttribute.cs" />
+     <Compile Include="Assets\Scripts\CameraMotion.cs" />
      <Compile Include="Assets\Scripts\CoroutineManager.cs" />
      <Compile Include="Assets\Scripts\CreepAI.cs" />
      <Compile Include="Assets\Scripts\Damage.cs" />
