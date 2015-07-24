@@ -73,7 +73,7 @@ public class BaseUnitBehaviour {
     }
  
     private void UpdateFindTarget () {
-        UnitViewPresenter tempTarget = GetTargetDelegate( myFaction );
+        UnitViewPresenter tempTarget = GetTargetDelegate( myFaction, myViewPresenter );
 
         if ( tempTarget != targetViewPresenter ) {
             targetViewPresenter = tempTarget;

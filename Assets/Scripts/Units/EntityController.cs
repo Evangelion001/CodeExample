@@ -11,21 +11,38 @@ public class EntityController {
         Red
     }
 
-    public delegate UnitViewPresenter GetTarget ( Faction myFaction );
+    public delegate UnitViewPresenter GetTarget ( Faction myFaction, UnitViewPresenter unit);
 
     //FIXME select nearest target
-    private UnitViewPresenter GetUnitTarget(Faction myFaction) {
+    private UnitViewPresenter GetUnitTarget(Faction myFaction, UnitViewPresenter unit ) {
+
+        float distance = 0;
+
+        UnitViewPresenter resUnitViewPresenter = null;
 
         if ( myFaction == Faction.Blue ) {
             if ( unitsControllersRed.Count > 0 ) {
-                return unitsControllersRed[0].GetUnitViewPresenter();
+                foreach ( var key in unitsControllersRed ) {
+                   float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
+                    if ( resUnitViewPresenter == null || tempDistance < distance ) {
+                        resUnitViewPresenter = key.GetUnitViewPresenter();
+                        distance = tempDistance;
+                    }
+                }
             }
         } else {
             if ( unitsControllersBlue.Count > 0 ) {
-                return unitsControllersBlue[0].GetUnitViewPresenter();
+                foreach ( var key in unitsControllersBlue ) {
+                    float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
+                    if ( resUnitViewPresenter == null || tempDistance < distance ) {
+                        resUnitViewPresenter = key.GetUnitViewPresenter();
+                        distance = tempDistance;
+                    }
+                }
             }
         }
-        return null;
+
+        return resUnitViewPresenter;
     }
 
     private List<BaseUnitController> unitsControllersRed;
