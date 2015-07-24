@@ -1,15 +1,24 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CoroutineManager : MonoBehaviour {
 
     public delegate void BoolMethodToCall ();
 
-    public IEnumerator InvokeRepeating ( BoolMethodToCall method, float waitTime, float repeatRate ) {
+    public delegate void KillCorutineDelegate();
+
+    private Dictionary<int,IEnumerator> currentCoroutines;
+
+    private int counter = 0;
+
+    public int InvokeRepeating ( BoolMethodToCall method, float waitTime, float repeatRate ) {
         IEnumerator tempIEnumerator = InvokeRepeatingMethod( method, waitTime, repeatRate );
         StartCoroutine( tempIEnumerator );
-        return tempIEnumerator;
+        currentCoroutines.Add( counter, tempIEnumerator );
+        ++counter;
+        return counter;
     }
 
     private IEnumerator InvokeRepeatingMethod ( BoolMethodToCall method, float waitTime, float repeatRate ) {
@@ -22,14 +31,14 @@ public class CoroutineManager : MonoBehaviour {
         }
     }
 
-    public void StopInvoke ( string startedIEnumerator ) {
-        //Debug.Log( "StopInvoke" );
-        StopCoroutine( startedIEnumerator );
+    public void StopInvoke ( int iEnumeratorId ) {
+        StopCoroutine( currentCoroutines[iEnumeratorId] );
+        currentCoroutines.Remove( iEnumeratorId );
     }
 
-    public void StopInvoke ( object startedIEnumerator ) {
+    public void StopInvoke ( UnityEngine.Object startedIEnumerator ) {
         //Debug.Log( "StopInvoke" );
-        StopAllCoroutines( );
+        StopCoroutine( (IEnumerator)startedIEnumerator );
     }
 
     public void StopInvoke () {

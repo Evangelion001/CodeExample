@@ -28,6 +28,7 @@ public class BaseUnitBehaviour: MonoBehaviour {
     private EntityController.GetTarget GetTargetDelegate;
     private EntityController.Faction myFaction;
     private bool playerOrder = false;
+    private TestStateMachine tsm;
 
     private StateMachine<State, Trigger> fsm = new StateMachine<State, Trigger>( State.Empty );
 
@@ -79,34 +80,45 @@ public class BaseUnitBehaviour: MonoBehaviour {
 
         //fsm.Fire( Trigger.Start );
 
-        TestStateMachine tsm = new TestStateMachine();
+        tsm = new TestStateMachine();
 
         tsm.SetStatePermit( TestStateMachine.States.Empty, TestStateMachine.Events.Start, TestStateMachine.States.Idle );
 
-        tsm.SetStateEntery( TestStateMachine.States.Idle, TestMethod );
-        tsm.AddStateUpdate( TestStateMachine.States.Idle, TestMethod, 0.5f );
+        tsm.SetStateEntery( TestStateMachine.States.Path, StartMove );
+        tsm.AddStateUpdate( TestStateMachine.States.Path, UpdateFindGroundPosition, 0.5f );
+        tsm.SetStatePermit( TestStateMachine.States.Path, TestStateMachine.Events.TargetApproached, TestStateMachine.States.Idle );
+        tsm.SetStateExit( TestStateMachine.States.Path, StopMoving );
+
+        tsm.SetStateEntery( TestStateMachine.States.Idle, StartIdle );
+        tsm.AddStateUpdate( TestStateMachine.States.Idle, UpdateFindTarget, 0.5f );
+        tsm.SetStatePermit( TestStateMachine.States.Idle, TestStateMachine.Events.GoToPosition, TestStateMachine.States.Path );
+        tsm.SetStatePermit( TestStateMachine.States.Idle, TestStateMachine.Events.TargetFound, TestStateMachine.States.FollowTarget );
+        tsm.SetStatePermit( TestStateMachine.States.Idle, TestStateMachine.Events.Dead, TestStateMachine.States.Dead );
+        tsm.SetStateExit( TestStateMachine.States.Idle, StopMoving );
+
+        tsm.SetStateEntery( TestStateMachine.States.FollowTarget, StartFollowTarget );
+        tsm.AddStateUpdate( TestStateMachine.States.FollowTarget, UpdateFindTarget, 0.5f );
+        tsm.SetStatePermit( TestStateMachine.States.FollowTarget, TestStateMachine.Events.GoToPosition, TestStateMachine.States.Path );
+        tsm.SetStatePermit( TestStateMachine.States.FollowTarget, TestStateMachine.Events.TargetApproached, TestStateMachine.States.Action );
+        tsm.SetStatePermit( TestStateMachine.States.FollowTarget, TestStateMachine.Events.Dead, TestStateMachine.States.Dead );
+        tsm.SetStateExit( TestStateMachine.States.FollowTarget, StopMoving );
+
+        tsm.SetStateEntery( TestStateMachine.States.Action, StartAttack );
+        tsm.AddStateUpdate( TestStateMachine.States.Action, UpdateAttack, 0.5f );
+        tsm.SetStatePermit( TestStateMachine.States.Action, TestStateMachine.Events.GoToPosition, TestStateMachine.States.Path );
+        tsm.SetStatePermit( TestStateMachine.States.Action, TestStateMachine.Events.TargetLost, TestStateMachine.States.Idle );
+        tsm.SetStatePermit( TestStateMachine.States.Action, TestStateMachine.Events.Dead, TestStateMachine.States.Dead );
+        tsm.SetStateExit( TestStateMachine.States.Action, StopMoving );
+
+        tsm.SetStateEntery( TestStateMachine.States.Dead, OnDeadEnter );
 
         tsm.CallEvent( TestStateMachine.Events.Start );
     }
 
-    bool testBool = false;
-
-    private void OutMethod () {
-        Debug.Log( "OutMethod " + transform.name );
-        if ( !testBool ) {
-            testBool = true;
-            Debug.Log( "OutMethod " + true + "  "+transform.name );
-        }
-    }
-
-
-    private void TestMethod () {
-        OutMethod();
-    }
-
     public void SetTargetPosition (Vector3 targetPosition ) {
         this.targetPosition = targetPosition;
-        fsm.Fire( Trigger.GoToPosition );
+        //fsm.Fire( Trigger.GoToPosition );
+        tsm.CallEvent( TestStateMachine.Events.GoToPosition );
     }
 
     private void StartMove () {
@@ -122,8 +134,8 @@ public class BaseUnitBehaviour: MonoBehaviour {
         if ( tempTarget != targetUnit ) {
             targetUnit = tempTarget;
             if ( targetUnit != null ) {
-
-                fsm.Fire( Trigger.TargetFound );
+                tsm.CallEvent( TestStateMachine.Events.TargetFound );
+                //fsm.Fire( Trigger.TargetFound );
             }
         }
 
@@ -134,7 +146,8 @@ public class BaseUnitBehaviour: MonoBehaviour {
         if ( Vector3.Distance( navMeshAgent.pathEndPosition, transform.position ) <= 0.1f ) {
             Debug.Log( "navMeshAgent.pathEndPosition: " + navMeshAgent.pathEndPosition );
             Debug.Log( "TargetApproached " + transform.name );
-            fsm.Fire( Trigger.TargetApproached );
+            tsm.CallEvent( TestStateMachine.Events.TargetApproached );
+            //fsm.Fire( Trigger.TargetApproached );
         }
 
     }
@@ -148,7 +161,8 @@ public class BaseUnitBehaviour: MonoBehaviour {
 
         if ( Vector3.Distance( navMeshAgent.pathEndPosition, transform.position ) <= 3f ) {
             Debug.Log( "TargetApproached " + transform.name );
-            fsm.Fire( Trigger.TargetApproached );
+            tsm.CallEvent( TestStateMachine.Events.TargetApproached );
+            //fsm.Fire( Trigger.TargetApproached );
             return;
         }
 
@@ -178,7 +192,8 @@ public class BaseUnitBehaviour: MonoBehaviour {
         Debug.Log( "UpdateAttack " + transform.name );
 
         if ( Vector3.Distance( targetUnit.transform.position, transform.position ) > 3f ) {
-            fsm.Fire( Trigger.TargetLost );
+            tsm.CallEvent( TestStateMachine.Events.TargetLost );
+            //fsm.Fire( Trigger.TargetLost );
             return;
         }
 
