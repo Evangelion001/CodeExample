@@ -139,7 +139,15 @@ namespace Stateless
 				return this;
 			}
 
-			private class CoroClass {
+            public StateConfiguration OnUpdate ( UnityEngine.MonoBehaviour script, string func, float startTime, float rate ) {
+                this
+                    .OnEntry( () => script.InvokeRepeating( func, startTime, rate ) )
+                    .OnExit( () => script.CancelInvoke( func ) );
+
+                return this;
+            }
+
+            private class CoroClass {
 				public Action action;
 				public float rate;
 				public bool exit = false;

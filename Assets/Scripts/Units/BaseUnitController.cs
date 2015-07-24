@@ -22,7 +22,7 @@ public class BaseUnitController {
         this.unitViewPresenter = unitViewPresenter;
         baseUnitModel = new BaseUnit( "Unit", unitCharacteristics );
         baseUnitBehaviour = unitViewPresenter.baseUnitBehaviour;
-        baseUnitBehaviour.Init( unitViewPresenter.navMeshAgent, getTarget, baseUnitModel.GetFaction() );
+        baseUnitBehaviour.Init( unitViewPresenter.navMeshAgent, getTarget, GetFaction() );
         baseUnitView = new BaseUnitView( unitViewPresenter, Selected, baseUnitModel.GetDamage );
 
     }

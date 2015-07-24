@@ -11,7 +11,7 @@ public class EntityController : MonoBehaviour {
         Red
     }
 
-    public delegate UnitViewPresenter GetTarget ( Faction enemyFaction );
+    public delegate UnitViewPresenter GetTarget ( Faction myFaction );
 
     private UnitViewPresenter GetUnitTarget(Faction myFaction) {
         if ( myFaction == Faction.Blue ) {
@@ -41,8 +41,10 @@ public class EntityController : MonoBehaviour {
         unitCharacteristics.attack = 10;
 
         if ( faction == Faction.Blue ) {
+            unitCharacteristics.faction = Faction.Blue;
             unitsControllersBlue[0] = new BaseUnitController( SelectUnit, unit.GetComponent<UnitViewPresenter>(), unitCharacteristics, GetUnitTarget );
         } else {
+            unitCharacteristics.faction = Faction.Red;
             unitsControllersRed[0] = new BaseUnitController( SelectUnit, unit.GetComponent<UnitViewPresenter>(), unitCharacteristics, GetUnitTarget );
         }
 
@@ -80,6 +82,7 @@ public class EntityController : MonoBehaviour {
             unitsControllersSelectedBlue = new BaseUnitController[1];
         }
         unitsControllersSelectedBlue[0] = selectedUnit;
+        Debug.Log( "SelectUnit" );
     }
 
 }

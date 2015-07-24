@@ -51,11 +51,12 @@ public class BaseUnit : IUnit {
     }
 
     public virtual void UpdateCharacteristics ( UnitCharacteristics characteristics ) {
-        baseCharacteristics = characteristics;
+        currentCharacteristics = characteristics;
     }
 
     public BaseUnit ( string name, UnitCharacteristics characteristics ) {
         this.name = name;
+        baseCharacteristics = characteristics;
         UpdateCharacteristics(characteristics);
     }
 

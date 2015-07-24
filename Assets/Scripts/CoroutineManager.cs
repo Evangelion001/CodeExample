@@ -27,5 +27,13 @@ public class CoroutineManager : MonoBehaviour {
         StopCoroutine( startedIEnumerator );
     }
 
+    public void StopInvoke ( object startedIEnumerator ) {
+        //Debug.Log( "StopInvoke" );
+        StopAllCoroutines( );
+    }
+
+    public void StopInvoke () {
+        StopAllCoroutines();
+    }
 
 }
