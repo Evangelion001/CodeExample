@@ -65,8 +65,6 @@
      <Compile Include="Assets\Scripts\Buildings\BuildController.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildModel.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildView.cs" />
-     <Compile Include="Assets\Scripts\Buildings\ReadOnly.cs" />
-     <Compile Include="Assets\Scripts\Buildings\ReadOnlyAttribute.cs" />
      <Compile Include="Assets\Scripts\CameraMotion.cs" />
      <Compile Include="Assets\Scripts\CoroutineManager.cs" />
      <Compile Include="Assets\Scripts\CreepAI.cs" />
@@ -85,9 +83,12 @@
      <Compile Include="Assets\Scripts\Units\BaseUnitController.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitView.cs" />
      <Compile Include="Assets\Scripts\Units\CreepUnit.cs" />
+     <Compile Include="Assets\Scripts\Units\EffectsController.cs" />
      <Compile Include="Assets\Scripts\Units\EntityController.cs" />
      <Compile Include="Assets\Scripts\Units\IUnit.cs" />
      <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
+     <Compile Include="Assets\UnityEditor\ReadOnly.cs" />
+     <Compile Include="Assets\UnityEditor\ReadOnlyAttribute.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

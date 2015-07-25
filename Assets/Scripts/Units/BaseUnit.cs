@@ -27,6 +27,8 @@ public class BaseUnit : IUnit {
     private string name;
     private UnitCharacteristics baseCharacteristics;
     private UnitCharacteristics currentCharacteristics;
+    private EffectsController effectsController;
+    private int currentHp;
 
     public virtual string Name {
        get {
@@ -38,10 +40,31 @@ public class BaseUnit : IUnit {
     }
 
     public virtual void GetDamage ( Damage damage ) {
-        currentCharacteristics.hp -= damage.value * (1 - currentCharacteristics.armor);
+        currentHp -= (int)(damage.value * (1 - currentCharacteristics.armor));
 
         //-> targetController->View.Updatehp
         //->targetController.Hit->stateModel.Hit->( если возможно )->controller->view->HitAnimation
+
+
+        if ( damage.changeCharacteristics != null ) {
+            EffectsController.TimeEffect timeEffect = new EffectsController.TimeEffect();
+
+            timeEffect = damage.changeCharacteristics( baseCharacteristics );
+
+            currentCharacteristics = timeEffect.unitCharacteristics;
+
+            effectsController.Buff( TurnBackCharacteristics, timeEffect );
+        } 
+
+    }
+
+    public virtual void TurnBackCharacteristics (UnitCharacteristics bufCharacteristics ) {
+        currentCharacteristics.hp += bufCharacteristics.hp;
+        currentCharacteristics.armor += bufCharacteristics.armor;
+        currentCharacteristics.attack += bufCharacteristics.attack;
+        currentCharacteristics.attackSpeed += bufCharacteristics.attackSpeed;
+        currentCharacteristics.speed += bufCharacteristics.speed;
+        currentCharacteristics.attackRange += bufCharacteristics.attackRange;
     }
 
     public virtual float Attack {

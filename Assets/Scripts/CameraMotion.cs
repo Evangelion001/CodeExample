@@ -8,7 +8,6 @@ public class CameraMotion : MonoBehaviour {
     private RaycastHit Hit;
     private float indentFromScreenEdgeX = 20;
     private float indentFromScreenEdgeY = 20;
-    private float smooth = 2f;
     public GameObject target;
     private float currentCameraHight;
 
@@ -26,11 +25,11 @@ public class CameraMotion : MonoBehaviour {
         } else {
             MoveToTarget();
         }
-        CameraHeightPosition();
+        //CameraHeightPosition();
     }
 
     private void LateUpdate () {
-        transform.position = tempCameraPosition;
+        transform.position = tempCameraPosition;//new Vector3( tempCameraPosition.x, tempCameraPosition2.y, tempCameraPosition.z);
     }
 
     Vector3 tempCameraPosition = Vector3.zero;
@@ -39,18 +38,21 @@ public class CameraMotion : MonoBehaviour {
 
     void CameraHeightPosition () {
 
-        Vector3 DirectionRay = transform.TransformDirection( Vector3.down );
+        Vector3 directionRay = transform.TransformDirection( Vector3.down );
 
-        if ( Physics.Raycast( transform.position, DirectionRay, out Hit ) ) {
+        tempCameraPosition2 = transform.position;
 
-            if ( Hit.distance < cameraHeight ) {
-                tempCameraPosition2 = transform.position + new Vector3( 0, ( cameraHeight - Hit.distance), 0 );
+        if ( Physics.Raycast( transform.position, directionRay, out Hit ) ) {
+
+            if ( Hit.distance < currentCameraHight ) {
+                tempCameraPosition2 += new Vector3( 0, ( currentCameraHight - Hit.distance), 0 );
             }
-            if ( Hit.distance > cameraHeight ) {
-                tempCameraPosition2 = transform.position - new Vector3( 0, (Hit.distance - cameraHeight ), 0 );
+            if ( Hit.distance > currentCameraHight ) {
+                tempCameraPosition2 -= new Vector3( 0, (Hit.distance - currentCameraHight ), 0 );
             }
         }
-        transform.position = Vector3.Lerp( transform.position, tempCameraPosition2, smooth * Time.deltaTime );
+
+        //transform.position = Vector3.Lerp( transform.position, tempCameraPosition2, smooth * Time.deltaTime );
     }
 
     private void CameraWidthPosition () {
@@ -72,7 +74,6 @@ public class CameraMotion : MonoBehaviour {
             tempCameraPosition += new Vector3( 0, 0, cameraSpeed * Time.deltaTime );
         }
 
-        //transform.position = tempCameraPosition;
     }
 
     public void SetTarget () {

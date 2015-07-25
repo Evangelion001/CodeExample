@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BuildView : MonoBehaviour {
+public class BuildView :MonoBehaviour {
 
     public EntityController.Faction faction;
 
@@ -12,7 +12,10 @@ public class BuildView : MonoBehaviour {
 
     public GameObject spawnPosition;
 
+#if UNITY_EDITOR
     [ReadOnly]
+#endif
+
     public int buildLevel;
 
     [SerializeField]

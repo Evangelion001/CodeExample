@@ -29,12 +29,12 @@ public class FiniteStateMachine {
     };
 
     public struct StateActionsUpdates {
-        public CoroutineManager.BoolMethodToCall actions;
+        public CoroutineManager.CoroutineMethodToCall actions;
         public float timers;
     }
 
-    private CoroutineManager.BoolMethodToCall[] entryStateActions;
-    private CoroutineManager.BoolMethodToCall[] exitStateActions;
+    private CoroutineManager.CoroutineMethodToCall[] entryStateActions;
+    private CoroutineManager.CoroutineMethodToCall[] exitStateActions;
     private List<StateActionsUpdates>[] stateActionsUpdatesList;
     private List<int> currentCoroutinesId;
 
@@ -51,8 +51,8 @@ public class FiniteStateMachine {
             stateActionsUpdatesList[i] = new List<StateActionsUpdates>();
         }
 
-        exitStateActions = new CoroutineManager.BoolMethodToCall[statesNum];
-        entryStateActions = new CoroutineManager.BoolMethodToCall[statesNum];
+        exitStateActions = new CoroutineManager.CoroutineMethodToCall[statesNum];
+        entryStateActions = new CoroutineManager.CoroutineMethodToCall[statesNum];
         statesPermitArray = new States[statesNum, eventsNum];
         currentCoroutinesId = new List<int>();
 
@@ -95,7 +95,7 @@ public class FiniteStateMachine {
         }
     }
 
-    public void AddStateUpdate ( States state, CoroutineManager.BoolMethodToCall stateDelegate, float updateTimer ) {
+    public void AddStateUpdate ( States state, CoroutineManager.CoroutineMethodToCall stateDelegate, float updateTimer ) {
         StateActionsUpdates tempStateActionsUpdates = new StateActionsUpdates();
 
         tempStateActionsUpdates.actions = stateDelegate;
@@ -104,11 +104,11 @@ public class FiniteStateMachine {
         stateActionsUpdatesList[(int)state].Add( tempStateActionsUpdates );
     }
 
-    public void SetStateEntery ( States state, CoroutineManager.BoolMethodToCall stateDelegate ) {
+    public void SetStateEntery ( States state, CoroutineManager.CoroutineMethodToCall stateDelegate ) {
         entryStateActions[(int)state] = stateDelegate;
     }
 
-    public void SetStateExit ( States state, CoroutineManager.BoolMethodToCall stateDelegate ) {
+    public void SetStateExit ( States state, CoroutineManager.CoroutineMethodToCall stateDelegate ) {
         exitStateActions[(int)state] = stateDelegate;
     }
 

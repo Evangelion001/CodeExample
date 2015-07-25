@@ -30,8 +30,6 @@ public class Spawn {
     private GameObject[] ResourseLoad () {
         Object[] tempLoadRes = Resources.LoadAll( PREFAB_LOAD_PATH );
 
-        Debug.Log( "tempLoadRes: " + tempLoadRes.Length );
-
         GameObject[] resPrefabs = new GameObject[tempLoadRes.Length];
 
         for ( int i = 0; i < tempLoadRes.Length; ++i ) {
