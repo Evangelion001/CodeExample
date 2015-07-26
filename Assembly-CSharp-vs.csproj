@@ -83,6 +83,7 @@
      <Compile Include="Assets\Scripts\Spell.cs" />
      <Compile Include="Assets\Scripts\Test.cs" />
      <Compile Include="Assets\Scripts\TimeEffect.cs" />
+     <Compile Include="Assets\Scripts\Units\AnimationController.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnit.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitBehaviour.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitController.cs" />
@@ -94,6 +95,7 @@
      <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnly.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnlyAttribute.cs" />
+     <None Include="Assets\Resources\SkeletonData\animations.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

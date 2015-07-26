@@ -6,6 +6,7 @@ public class UnitViewPresenter : MonoBehaviour {
     public NavMeshAgent navMeshAgent;
     public BaseUnitBehaviour baseUnitBehaviour;
     public BaseUnit.UnitType unityType;
+    public Animation _animation;
 
     private  BaseUnitController.SelectUnit selectUnit;
     private BaseUnit.DamageDelegate damageDelegate;

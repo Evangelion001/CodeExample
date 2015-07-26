@@ -11,10 +11,17 @@ public class BaseUnitBehaviour {
     private EntityController.GetTarget GetTargetDelegate;
     private EntityController.Faction myFaction;
     private FiniteStateMachine fsm;
+    private AnimationController animationController;
+    private float attackSpeed = 0;
+    private float attackRange = 0;
+    private BaseUnit.GetInfluenceDelegate influence;
+    private bool canAttack = true;
 
     //private StateMachine<State, Trigger> fsm = new StateMachine<State, Trigger>( State.Empty );
 
-    public BaseUnitBehaviour ( NavMeshAgent navMeshAgent, EntityController.GetTarget getTarget, EntityController.Faction faction, UnitViewPresenter myViewPresenter ) {
+    public BaseUnitBehaviour ( NavMeshAgent navMeshAgent, EntityController.GetTarget getTarget, EntityController.Faction faction, UnitViewPresenter myViewPresenter, AnimationController animationController, BaseUnit.GetInfluenceDelegate influence ) {
+        this.animationController = animationController;
+        this.influence = influence;
         myFaction = faction;
         this.myViewPresenter = myViewPresenter;
         this.navMeshAgent = navMeshAgent;
@@ -68,6 +75,7 @@ public class BaseUnitBehaviour {
     }
 
     private void StartMove () {
+        animationController.RunAnimation();
         navMeshAgent.ResetPath();
         navMeshAgent.SetDestination( targetPosition );
     }
@@ -100,7 +108,7 @@ public class BaseUnitBehaviour {
 
     private void UpdateFollowTarget () {
 
-        if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= 3f ) {
+        if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
             //fsm.Fire( Trigger.TargetApproached );
             return;
@@ -114,15 +122,18 @@ public class BaseUnitBehaviour {
 
     private void StartIdle () {
         Debug.Log( "StartIdle" );
+        animationController.IdleAnimation();
         targetViewPresenter = null;
         navMeshAgent.ResetPath();
     }
 
     private void StartFollowTarget () {
+        animationController.RunAnimation();
         navMeshAgent.SetDestination( targetViewPresenter.transform.position );
     }
 
     private void StopMoving () {
+        animationController.IdleAnimation();
         navMeshAgent.ResetPath();
     }
 
@@ -133,6 +144,22 @@ public class BaseUnitBehaviour {
             return;
         }
 
+        if ( canAttack ) {
+            animationController.AttackAnimation();
+            targetViewPresenter.GetDamage( influence() );
+            canAttack = false;
+            SceneManager.Instance.CoroutineManager.Invoke( "EndOfDelayAttack", attackSpeed );
+        }
+
+    }
+
+    private void EndOfDelayAttack () {
+        canAttack = true;
+    }
+
+    public void SetAttackParam (float attackSpeed, float attackRange) {
+        this.attackSpeed = attackSpeed;
+        this.attackRange = attackRange;
     }
 
     private void StartAttack () {
@@ -141,6 +168,7 @@ public class BaseUnitBehaviour {
 
     private void StopAttack () {
         Debug.Log( "StopAttack" );
+        animationController.IdleAnimation();
         targetViewPresenter = null;
         navMeshAgent.ResetPath();
     }

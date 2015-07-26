@@ -55,7 +55,7 @@ public class EntityController {
 
     public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction ) {
 
-        BaseUnitController tempBaseUnitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction );
+        BaseUnitController tempBaseUnitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
 
         if ( faction == Faction.Blue ) {
             unitsControllersBlue.Add( tempBaseUnitController );
@@ -63,6 +63,15 @@ public class EntityController {
             unitsControllersRed.Add( tempBaseUnitController );
         }
 
+    }
+
+    public void DestroyUnit (BaseUnitController baseUnitController ) {
+        if ( unitsControllersBlue.Contains( baseUnitController ) ) {
+            unitsControllersBlue.Remove( baseUnitController );
+        }
+        if ( unitsControllersRed.Contains( baseUnitController ) ) {
+            unitsControllersRed.Remove( baseUnitController );
+        }
     }
 
     public void UnselectUints () {

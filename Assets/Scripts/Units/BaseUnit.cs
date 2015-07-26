@@ -12,6 +12,7 @@ public class BaseUnit : IUnit {
     }
 
     public delegate void DamageDelegate ( Influence damage );
+    public delegate Influence GetInfluenceDelegate ();
 
     [Serializable]
     public class UnitCharacteristics {
@@ -62,6 +63,8 @@ public class BaseUnit : IUnit {
     private UnitCharacteristics currentCharacteristics;
     private EffectsController effectsController;
     private List<Effect> currentEffects = new List<Effect>();
+    private BaseUnitController.Death updateDeath;
+
     //FIXME Move to hero
     private Spell[] spells;
     BaseUnitController.UpdateCharacteristics updateCharacteristicsDelegate;
@@ -112,10 +115,23 @@ public class BaseUnit : IUnit {
         UpdateCharacteristics( tempCharacteristics );
     }
 
+    public virtual Influence GetInfluence () {
+
+        Influence tempInfluence = new Influence();
+        tempInfluence.damage = currentCharacteristics.attack;
+
+        return tempInfluence;
+
+    }
+
     public virtual void GetDamage ( Influence influence ) {
         currentHp -= (int)( influence.damage * (1 - currentCharacteristics.armor));
         currentHp += (int) influence.healing;
 
+        if ( currentHp <= 0 ) {
+            currentHp = 0;
+            updateDeath();
+        }
         //-> targetController->View.Updatehp
         //->targetController.Hit->stateModel.Hit->( если возможно )->controller->view->HitAnimation
 
@@ -140,8 +156,9 @@ public class BaseUnit : IUnit {
         updateCharacteristicsDelegate( currentCharacteristics );
     }
 
-    public BaseUnit ( string name, UnitCharacteristics characteristics, Spell[] spells, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics ) {
+    public BaseUnit ( string name, UnitCharacteristics characteristics, Spell[] spells, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics, BaseUnitController.Death updateDeath ) {
         this.updateCharacteristicsDelegate = updateCharacteristics;
+        this.updateDeath = updateDeath;
         this.name = name;
         baseCharacteristics = characteristics;
         currentHp = baseCharacteristics.hp;

@@ -5,12 +5,17 @@ public class BaseUnitController {
 
     public delegate void SelectUnit ();
     public delegate void UpdateCharacteristics ( BaseUnit.UnitCharacteristics unitCharacteristics );
+    public delegate void Death ();
+    public delegate void DeathDestroy (BaseUnitController baseUnitController );
 
     private EntityController.Select entityControllerSelect;
+
+    private DeathDestroy updateDeath;
 
     private BaseUnitView baseUnitView;
     private BaseUnit baseUnitModel;
     private BaseUnitBehaviour baseUnitBehaviour;
+    private AnimationController animationController;
 
     public UnitViewPresenter GetUnitViewPresenter () {
         return baseUnitView.GetUnitViewPresenter();
@@ -18,16 +23,20 @@ public class BaseUnitController {
 
     private NavMeshAgent tempNavMeshAgent;
 
-    public BaseUnitController (EntityController.Select entityControllerSelect, UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, EntityController.GetTarget getTarget, EntityController.Faction faction ) {
+    public BaseUnitController (EntityController.Select entityControllerSelect, UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, EntityController.GetTarget getTarget, EntityController.Faction faction, DeathDestroy updateDeath ) {
+        this.updateDeath = updateDeath;
+        animationController = new AnimationController( unitViewPresenter._animation );
 
         EffectsController effectsController = new EffectsController();
 
+        GameObject freezeEffect = (GameObject)Resources.Load( "Prefabs/Particles/Freeze" );
         Spell[] spells = new Spell[1];
         spells[0] = new Spell();
 
         Effect effect = new Effect( effectsController );
         effect.characteristicsModifiers.attackSpeed = 0.5f;
         effect.characteristicsModifiers.speed = 0.5f;
+        effect.visualPrefab = freezeEffect;
 
         spells[0].aoeRadius = 0;
         spells[0].attackRange = 1;
@@ -39,8 +48,8 @@ public class BaseUnitController {
         tempNavMeshAgent = unitViewPresenter.navMeshAgent;
 
         this.entityControllerSelect = entityControllerSelect;
-        baseUnitModel = new BaseUnit( "Unit", unitCharacteristics, spells, faction, effectsController, _UpdateCharacteristics );
-        baseUnitBehaviour = new BaseUnitBehaviour( unitViewPresenter.navMeshAgent, getTarget, GetFaction(), unitViewPresenter );
+        baseUnitModel = new BaseUnit( "Unit", unitCharacteristics, spells, faction, effectsController, _UpdateCharacteristics, UpdateDeath );
+        baseUnitBehaviour = new BaseUnitBehaviour( unitViewPresenter.navMeshAgent, getTarget, GetFaction(), unitViewPresenter, animationController, baseUnitModel.GetInfluence );
         baseUnitView = new BaseUnitView( unitViewPresenter, Selected, baseUnitModel.GetDamage );
 
         Influence influence = new Influence();
@@ -82,7 +91,13 @@ public class BaseUnitController {
     private void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics ) {
 
         tempNavMeshAgent.speed = newCharacteristics.speed;
+        baseUnitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
 
+    }
+
+    private void UpdateDeath () {
+        GameObject.Destroy( baseUnitView.GetUnitViewPresenter().gameObject );
+        updateDeath(this);
     }
 
     //public virtual void Attack (BaseUnit unit) {
