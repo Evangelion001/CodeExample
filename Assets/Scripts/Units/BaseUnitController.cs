@@ -4,7 +4,7 @@ using System.Collections;
 public class BaseUnitController {
 
     public delegate void SelectUnit ();
-    public delegate void UpdateCharacteristics ( BaseUnit.UnitCharacteristics unitCharacteristics );
+    public delegate void UpdateCharacteristics ( BaseUnit.UnitCharacteristics unitCharacteristics, Influence influence );
     public delegate void Death ();
     public delegate void DeathDestroy (BaseUnitController baseUnitController );
 
@@ -48,8 +48,8 @@ public class BaseUnitController {
         tempNavMeshAgent = unitViewPresenter.navMeshAgent;
 
         this.entityControllerSelect = entityControllerSelect;
+        baseUnitBehaviour = new BaseUnitBehaviour( getTarget, faction, unitViewPresenter, animationController );
         baseUnitModel = new BaseUnit( "Unit", unitCharacteristics, spells, faction, effectsController, _UpdateCharacteristics, UpdateDeath );
-        baseUnitBehaviour = new BaseUnitBehaviour( unitViewPresenter.navMeshAgent, getTarget, GetFaction(), unitViewPresenter, animationController, baseUnitModel.GetInfluence );
         baseUnitView = new BaseUnitView( unitViewPresenter, Selected, baseUnitModel.GetDamage );
 
         Influence influence = new Influence();
@@ -80,28 +80,23 @@ public class BaseUnitController {
         baseUnitBehaviour.SetTargetPosition( postion );
     }
 
-    public virtual EntityController.Faction GetFaction () {
-        return baseUnitModel.GetFaction();
-    }
-
     public void GetDamage (Influence influence ) {
         baseUnitModel.GetDamage( influence );
     }
 
-    private void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics ) {
+    private void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics, Influence influence ) {
 
         tempNavMeshAgent.speed = newCharacteristics.speed;
         baseUnitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
+        baseUnitBehaviour.SetInfluence( influence );
 
     }
 
     private void UpdateDeath () {
+        baseUnitBehaviour.CallDeathFSMEvent();
         GameObject.Destroy( baseUnitView.GetUnitViewPresenter().gameObject );
         updateDeath(this);
+        Debug.Log( "Daeth" );
     }
-
-    //public virtual void Attack (BaseUnit unit) {
-    //    unit.GetDamage();
-    //}
 
 }

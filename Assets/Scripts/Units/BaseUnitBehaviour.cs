@@ -14,17 +14,16 @@ public class BaseUnitBehaviour {
     private AnimationController animationController;
     private float attackSpeed = 0;
     private float attackRange = 0;
-    private BaseUnit.GetInfluenceDelegate influence;
+    private Influence influence;
     private bool canAttack = true;
 
     //private StateMachine<State, Trigger> fsm = new StateMachine<State, Trigger>( State.Empty );
 
-    public BaseUnitBehaviour ( NavMeshAgent navMeshAgent, EntityController.GetTarget getTarget, EntityController.Faction faction, UnitViewPresenter myViewPresenter, AnimationController animationController, BaseUnit.GetInfluenceDelegate influence ) {
-        this.animationController = animationController;
-        this.influence = influence;
-        myFaction = faction;
+    public BaseUnitBehaviour ( EntityController.GetTarget getTarget, EntityController.Faction faction, UnitViewPresenter myViewPresenter, AnimationController animationController) {
         this.myViewPresenter = myViewPresenter;
-        this.navMeshAgent = navMeshAgent;
+        this.animationController = animationController;
+        myFaction = faction;
+        this.navMeshAgent = myViewPresenter.navMeshAgent;
         GetTargetDelegate = getTarget;
         InitStateMachine();
     }
@@ -39,6 +38,7 @@ public class BaseUnitBehaviour {
         fsm.AddStateUpdate( FiniteStateMachine.States.Path, UpdateFindGroundPosition, 0.1f );
         fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Idle );
         fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
+        fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
         fsm.SetStateExit( FiniteStateMachine.States.Path, StopMoving );
 
         fsm.SetStateEntery( FiniteStateMachine.States.Idle, StartIdle );
@@ -81,6 +81,7 @@ public class BaseUnitBehaviour {
     }
  
     private void UpdateFindTarget () {
+
         UnitViewPresenter tempTarget = GetTargetDelegate( myFaction, myViewPresenter );
 
         if ( tempTarget != targetViewPresenter ) {
@@ -138,7 +139,7 @@ public class BaseUnitBehaviour {
     }
 
     private void UpdateAttack () {
-        if ( Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > 3f ) {
+        if ( Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             //fsm.Fire( Trigger.TargetLost );
             return;
@@ -146,7 +147,7 @@ public class BaseUnitBehaviour {
 
         if ( canAttack ) {
             animationController.AttackAnimation();
-            targetViewPresenter.GetDamage( influence() );
+            targetViewPresenter.GetDamage( influence );
             canAttack = false;
             SceneManager.Instance.CoroutineManager.Invoke( "EndOfDelayAttack", attackSpeed );
         }
@@ -160,6 +161,14 @@ public class BaseUnitBehaviour {
     public void SetAttackParam (float attackSpeed, float attackRange) {
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;
+    }
+
+    public void SetInfluence (Influence influence ) {
+        this.influence = influence;
+    }
+
+    public void CallDeathFSMEvent () {
+        fsm.CallEvent( FiniteStateMachine.Events.Dead );
     }
 
     private void StartAttack () {

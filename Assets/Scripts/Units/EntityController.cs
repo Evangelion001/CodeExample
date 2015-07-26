@@ -27,14 +27,14 @@ public class EntityController {
             tempBaseUnitControllers = unitsControllersBlue;
         }
 
-        if ( tempBaseUnitControllers.Count > 0 ) {
-            foreach ( var key in tempBaseUnitControllers ) {
-                float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
-                if ( resUnitViewPresenter == null || tempDistance < distance ) {
-                    resUnitViewPresenter = key.GetUnitViewPresenter();
-                    distance = tempDistance;
-                }
+        foreach ( var key in tempBaseUnitControllers ) {
+
+            float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
+            if ( resUnitViewPresenter == null || tempDistance < distance ) {
+                resUnitViewPresenter = key.GetUnitViewPresenter();
+                distance = tempDistance;
             }
+
         }
 
         return resUnitViewPresenter;

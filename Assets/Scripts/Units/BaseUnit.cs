@@ -59,8 +59,8 @@ public class BaseUnit : IUnit {
     private string name;
     private int currentHp;
     private EntityController.Faction faction;
-    private UnitCharacteristics baseCharacteristics;
-    private UnitCharacteristics currentCharacteristics;
+    private UnitCharacteristics baseCharacteristics = new UnitCharacteristics();
+    private UnitCharacteristics currentCharacteristics = new UnitCharacteristics();
     private EffectsController effectsController;
     private List<Effect> currentEffects = new List<Effect>();
     private BaseUnitController.Death updateDeath;
@@ -115,7 +115,7 @@ public class BaseUnit : IUnit {
         UpdateCharacteristics( tempCharacteristics );
     }
 
-    public virtual Influence GetInfluence () {
+    private Influence GetInfluence () {
 
         Influence tempInfluence = new Influence();
         tempInfluence.damage = currentCharacteristics.attack;
@@ -127,6 +127,8 @@ public class BaseUnit : IUnit {
     public virtual void GetDamage ( Influence influence ) {
         currentHp -= (int)( influence.damage * (1 - currentCharacteristics.armor));
         currentHp += (int) influence.healing;
+
+        Debug.Log( "currentHp: " + currentHp );
 
         if ( currentHp <= 0 ) {
             currentHp = 0;
@@ -153,7 +155,7 @@ public class BaseUnit : IUnit {
 
     public virtual void UpdateCharacteristics ( UnitCharacteristics characteristics ) {
         currentCharacteristics = characteristics;
-        updateCharacteristicsDelegate( currentCharacteristics );
+        updateCharacteristicsDelegate( currentCharacteristics, GetInfluence() );
     }
 
     public BaseUnit ( string name, UnitCharacteristics characteristics, Spell[] spells, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics, BaseUnitController.Death updateDeath ) {
@@ -162,10 +164,10 @@ public class BaseUnit : IUnit {
         this.name = name;
         baseCharacteristics = characteristics;
         currentHp = baseCharacteristics.hp;
-        UpdateCharacteristics(characteristics);
         this.spells = spells;
         this.faction = faction;
         this.effectsController = effectsController;
+        UpdateCharacteristics( baseCharacteristics );
         Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
