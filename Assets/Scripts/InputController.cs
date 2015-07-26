@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class InputController : MonoBehaviour {
@@ -7,25 +8,25 @@ public class InputController : MonoBehaviour {
 
     private CenterUIView cuiv;
 
-    private Spawn spawn;
-
-    private BuildView[] buildView;
-
     private EntityController entityController;
+
+    private GameStateController gameStateController;
+
+    public delegate void UpdateWaveTimer ( int value ); 
+
+    public Text timerValue;
 
     void Start () {
         cuiv = new CenterUIView();
         cuiv.centerUIViewPresenter = FindObjectOfType<CenterUIViewPresenter>();
 
         entityController = new EntityController();
-        spawn = new Spawn( entityController );
+        gameStateController = new GameStateController( entityController, _UpdateWaveTimer );
 
-        buildView = FindObjectsOfType<BuildView>();
+    }
 
-        foreach ( var key in buildView ) {
-            spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction );
-        }
-
+    private void _UpdateWaveTimer (int value) {
+        timerValue.text = value.ToString();
     }
 
     void Update () {

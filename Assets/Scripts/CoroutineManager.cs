@@ -42,7 +42,7 @@ public class CoroutineManager : MonoBehaviour {
         yield return null;
     }
 
-    public IEnumerator InvokeRepeatingBoolMethod ( BoolCoroutineMethodToCall method, float waitTime ) {
+    private IEnumerator InvokeRepeatingBoolMethod ( BoolCoroutineMethodToCall method, float waitTime ) {
         method();
         while ( true ) {
             yield return new WaitForSeconds( waitTime );
