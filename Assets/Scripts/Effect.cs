@@ -5,13 +5,11 @@ using System.Collections.Generic;
 [Serializable]
 public class Effect {
 
-    public Effect (EffectsConstructor effectsConstructor ) {
+    public Effect ( EffectsController effectsController ) {
 
-        List<Effect> tempEffects = effectsConstructor.AddEffect(this);
+        stackRelationship = new Dictionary<Effect, bool>();
 
-        foreach ( var key in tempEffects ) {
-            stackRelationship.Add( key, false );
-        }
+        List<Effect> tempEffects = effectsController.AddEffectToArray(this);
 
     }
 
@@ -28,7 +26,7 @@ public class Effect {
     public Dictionary<Effect, bool> stackRelationship;
 
     [SerializeField]
-    public BaseUnit.UnitCharacteristics characteristicsModifiers;
+    public BaseUnit.UnitCharacteristics characteristicsModifiers = new BaseUnit.UnitCharacteristics();
     //Dot damage etc
 
 }

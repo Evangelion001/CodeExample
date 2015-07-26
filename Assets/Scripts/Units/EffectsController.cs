@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class EffectsController {
 
-    public delegate void RemoveCoroutineEffect (Effect effect);
+    public delegate void RemoveCoroutineEffect (TimeEffect effect);
 
     private EffectsConstructor effectsConstructor;
 
@@ -14,8 +14,8 @@ public class EffectsController {
         effectsConstructor = new EffectsConstructor();
     }
 
-    public void AddEffectToArray (Effect effect) {
-        effectsConstructor.AddEffect( effect );
+    public List<Effect> AddEffectToArray (Effect effect) {
+       return effectsConstructor.AddEffect( effect );
     }
 
     public void AddCoroutineToEffect ( RemoveCoroutineEffect  removeEffect, TimeEffect timeEffect ) {

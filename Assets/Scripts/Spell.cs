@@ -4,17 +4,17 @@ using System;
 [Serializable]
 public class Spell {
     [SerializeField]
-    public float damage;
+    public float damage = 0;
     [SerializeField]
-    public float healing;
+    public float healing = 0;
     [SerializeField]
-    public float attackRange;
+    public float attackRange = 0;
     [SerializeField]
-    public float aoeRadius;
+    public float aoeRadius = 0;
     [SerializeField]
-    public bool needTarget;
+    public bool needTarget = false;
     [SerializeField]
-    public Effect effect;
+    public Effect effect = null;
     [SerializeField]
-    public GameObject visualPrefab;
+    public GameObject visualPrefab = null;
 }

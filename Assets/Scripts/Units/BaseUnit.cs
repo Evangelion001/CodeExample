@@ -61,6 +61,9 @@ public class BaseUnit : IUnit {
     private UnitCharacteristics currentCharacteristics;
     private EffectsController effectsController;
     private List<Effect> currentEffects = new List<Effect>();
+    //FIXME Move to hero
+    private Spell[] spells;
+    BaseUnitController.UpdateCharacteristics updateCharacteristicsDelegate;
 
     public EntityController.Faction GetFaction () {
         return faction;
@@ -78,27 +81,34 @@ public class BaseUnit : IUnit {
     private void RemoveEffect ( TimeEffect effect ) {
         currentEffects.Remove( effect );
         UpdateAppliedEffects();
+        Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
-    private void AddNewEffect ( TimeEffect timeEffect ) {
+    private void AddEffect ( TimeEffect timeEffect ) {
 
         for ( int i = 0; i < currentEffects.Count; ++i ) {
             if ( currentEffects[i].id == timeEffect.id) {
                 currentEffects.Remove( currentEffects[i] );
             }
         }
+        currentEffects.Add( timeEffect );
+
         ApplyEffect( timeEffect );
     }
 
     private void ApplyEffect ( TimeEffect timeEffect ) {
-        effectsController.Buff( RemoveEffect, timeEffect );
+        effectsController.AddCoroutineToEffect( RemoveEffect, timeEffect );
         UpdateAppliedEffects();
+        Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
     private void UpdateAppliedEffects () {
+        UnitCharacteristics tempCharacteristics = baseCharacteristics;
         for ( int i = 0; i < currentEffects.Count; ++i ) {
-            currentCharacteristics += baseCharacteristics * currentEffects[i].characteristicsModifiers;
+            Debug.Log( "currentEffects[i].characteristicsModifiers: " + currentEffects[i].characteristicsModifiers );
+            tempCharacteristics = baseCharacteristics * currentEffects[i].characteristicsModifiers;
         }
+        UpdateCharacteristics( tempCharacteristics );
     }
 
     public virtual void GetDamage ( Influence influence ) {
@@ -108,7 +118,7 @@ public class BaseUnit : IUnit {
         //-> targetController->View.Updatehp
         //->targetController.Hit->stateModel.Hit->( если возможно )->controller->view->HitAnimation
 
-        AddNewEffect( influence.timeEffect );
+        AddEffect( influence.timeEffect );
 
     }
 
@@ -126,13 +136,19 @@ public class BaseUnit : IUnit {
 
     public virtual void UpdateCharacteristics ( UnitCharacteristics characteristics ) {
         currentCharacteristics = characteristics;
+        updateCharacteristicsDelegate( currentCharacteristics );
     }
 
-    public BaseUnit ( string name, UnitCharacteristics characteristics ) {
+    public BaseUnit ( string name, UnitCharacteristics characteristics, Spell[] spells, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics ) {
         this.name = name;
         baseCharacteristics = characteristics;
         currentHp = baseCharacteristics.hp;
         UpdateCharacteristics(characteristics);
+        this.spells = spells;
+        this.faction = faction;
+        this.effectsController = effectsController;
+        this.updateCharacteristicsDelegate = updateCharacteristics;
+        Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
 

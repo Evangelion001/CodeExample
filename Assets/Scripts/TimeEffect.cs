@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TimeEffect :Effect {
 
-    public TimeEffect ( EffectsConstructor effectsConstructor ):base( effectsConstructor ) {
+    public TimeEffect ( EffectsController EffectsController ) :base( EffectsController ) {
 
     }
 
