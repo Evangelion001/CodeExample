@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 public class CoroutineManager : MonoBehaviour {
 
-    public delegate void CoroutineBuf ( BaseUnit.UnitCharacteristics unitCharacteristics );
     public delegate bool BoolCoroutineMethodToCall ();
     public delegate void CoroutineMethodToCall ();
 
@@ -13,9 +12,9 @@ public class CoroutineManager : MonoBehaviour {
 
     private int counter = 0;
 
-    public int InvokeBuf ( CoroutineBuf method, BaseUnit.UnitCharacteristics unitCharacteristics, float waitTime ) {
+    public int InvokeBuf ( EffectsController.RemoveCoroutineEffect  removeEffect, TimeEffect timeEffect ) {
         ++counter;
-        IEnumerator tempIEnumerator = _InvokeBuf( method, unitCharacteristics, waitTime );
+        IEnumerator tempIEnumerator = _InvokeBuf( removeEffect, timeEffect );
         currentCoroutines.Add( counter, tempIEnumerator );
         StartCoroutine( tempIEnumerator );
         return counter;
@@ -37,9 +36,9 @@ public class CoroutineManager : MonoBehaviour {
         return counter;
     }
 
-    private IEnumerator _InvokeBuf ( CoroutineBuf method, BaseUnit.UnitCharacteristics unitCharacteristics, float waitTime ) {
-        yield return new WaitForSeconds( waitTime );
-        method( unitCharacteristics );
+    private IEnumerator _InvokeBuf ( EffectsController.RemoveCoroutineEffect  removeEffect, TimeEffect timeEffect ) {
+        yield return new WaitForSeconds( timeEffect.duration );
+        removeEffect( timeEffect );
         yield return null;
     }
 

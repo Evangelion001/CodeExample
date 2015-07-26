@@ -43,11 +43,11 @@ public class Spawn {
         return resPrefabs;
     }
 
-    public void CreateUnitByType ( BaseUnit.UnitType unitType, Vector3 spawnPosition, BaseUnit.UnitCharacteristics characteristics) {
+    public void CreateUnitByType ( BaseUnit.UnitType unitType, Vector3 spawnPosition, BaseUnit.UnitCharacteristics characteristics, EntityController.Faction faction) {
 
         GameObject tempUnit = (GameObject)GameObject.Instantiate( GetPrefabByType( unitType ), spawnPosition, new Quaternion(0,0,0,0) );
 
-        entityController.CreateUnit( tempUnit.GetComponent<UnitViewPresenter>(), characteristics );
+        entityController.CreateUnit( tempUnit.GetComponent<UnitViewPresenter>(), characteristics, faction );
     }
 
 }

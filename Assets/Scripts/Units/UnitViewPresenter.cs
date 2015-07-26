@@ -30,8 +30,8 @@ public class UnitViewPresenter : MonoBehaviour {
         selectCircle.SetActive( false );
     }
 
-    public void GetDamage (Damage damage) {
-        damageDelegate( damage );
+    public void GetDamage (Influence influence ) {
+        damageDelegate( influence );
     }
 
 }

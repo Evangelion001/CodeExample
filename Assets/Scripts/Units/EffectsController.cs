@@ -5,26 +5,21 @@ using System.Collections.Generic;
 
 public class EffectsController {
 
-    public delegate TimeEffect ChangeCharacteristics ( BaseUnit.UnitCharacteristics unitCharacteristics );
+    public delegate void RemoveCoroutineEffect (Effect effect);
 
-    public struct TimeEffect {
-        public BaseUnit.UnitCharacteristics unitCharacteristics;
-        public float duration;
+    private EffectsConstructor effectsConstructor;
+
+    //FIXME init with effectsArray
+    public EffectsController () {
+        effectsConstructor = new EffectsConstructor();
     }
 
-    public void Buff ( CoroutineManager.CoroutineBuf turnBack, TimeEffect timeEffect ) {
-
-        SceneManager.Instance.CoroutineManager.InvokeBuf(turnBack, timeEffect.unitCharacteristics, timeEffect.duration );
-
+    public void AddEffectToArray (Effect effect) {
+        effectsConstructor.AddEffect( effect );
     }
 
-    private Dictionary<int, Spell> spellDictionary;
-
-    public class Spell {
-        public string Name;
-        public int id;
-        public GameObject effect;
-
+    public void AddCoroutineToEffect ( RemoveCoroutineEffect  removeEffect, TimeEffect timeEffect ) {
+        SceneManager.Instance.CoroutineManager.InvokeBuf(removeEffect,timeEffect);
     }
 
 }

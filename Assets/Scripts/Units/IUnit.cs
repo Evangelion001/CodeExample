@@ -9,7 +9,7 @@
         get;
     }
 
-    void GetDamage (Damage damage);
+    void GetDamage (Influence influence );
 
     void UpdateCharacteristics ( BaseUnit.UnitCharacteristics characteristics );
 }

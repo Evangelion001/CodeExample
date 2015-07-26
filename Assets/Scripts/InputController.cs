@@ -23,7 +23,7 @@ public class InputController : MonoBehaviour {
         buildView = FindObjectsOfType<BuildView>();
 
         foreach ( var key in buildView ) {
-            spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit() );
+            spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction );
         }
 
     }

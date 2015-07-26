@@ -53,11 +53,11 @@ public class EntityController {
         unitsControllersSelectedBlue = new List<BaseUnitController>();
     }
 
-    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics ) {
+    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction ) {
 
         BaseUnitController tempBaseUnitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget );
 
-        if ( unitCharacteristics.faction == Faction.Blue ) {
+        if ( faction == Faction.Blue ) {
             unitsControllersBlue.Add( tempBaseUnitController );
         } else {
             unitsControllersRed.Add( tempBaseUnitController );

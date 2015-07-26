@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public class BaseUnit : IUnit {
 
@@ -8,27 +10,61 @@ public class BaseUnit : IUnit {
         hero
     }
 
-    public delegate void DamageDelegate (Damage damage);
+    public delegate void DamageDelegate ( Influence damage );
 
-    public EntityController.Faction GetFaction() {
-        return currentCharacteristics.faction;
-    }
-
-    public struct UnitCharacteristics {
-        public float hp;
+    [Serializable]
+    public class UnitCharacteristics {
+        [SerializeField]
+        public int hp;
+        [SerializeField]
         public float armor;
+        [SerializeField]
         public float attack;
+        [SerializeField]
         public float attackSpeed;
+        [SerializeField]
         public float speed;
+        [SerializeField]
         public float attackRange;
-        public EntityController.Faction faction;
+
+        public static UnitCharacteristics operator *( UnitCharacteristics first, UnitCharacteristics second ) {
+            UnitCharacteristics temp = new UnitCharacteristics();
+
+            temp.hp = first.hp * second.hp;
+            temp.armor = first.armor * second.armor;
+            temp.attackSpeed = first.attackSpeed * second.attackSpeed;
+            temp.attackSpeed = first.attackSpeed * second.attackSpeed;
+            temp.speed = first.speed * second.speed;
+            temp.attackRange = first.attackRange * second.attackRange;
+
+            return temp;
+        }
+
+        public static UnitCharacteristics operator +( UnitCharacteristics first, UnitCharacteristics second ) {
+            UnitCharacteristics temp = new UnitCharacteristics();
+
+            temp.hp = first.hp + second.hp;
+            temp.armor = first.armor + second.armor;
+            temp.attackSpeed = first.attackSpeed + second.attackSpeed;
+            temp.attackSpeed = first.attackSpeed + second.attackSpeed;
+            temp.speed = first.speed + second.speed;
+            temp.attackRange = first.attackRange + second.attackRange;
+
+            return temp;
+        }
     }
 
     private string name;
+    private int currentHp;
+    private EntityController.Faction faction;
     private UnitCharacteristics baseCharacteristics;
     private UnitCharacteristics currentCharacteristics;
     private EffectsController effectsController;
-    private int currentHp;
+    private List<Effect> currentEffects = new List<Effect>();
+
+    public EntityController.Faction GetFaction () {
+        return faction;
+    }
 
     public virtual string Name {
        get {
@@ -39,32 +75,41 @@ public class BaseUnit : IUnit {
        }
     }
 
-    public virtual void GetDamage ( Damage damage ) {
-        currentHp -= (int)(damage.value * (1 - currentCharacteristics.armor));
+    private void RemoveEffect ( TimeEffect effect ) {
+        currentEffects.Remove( effect );
+        UpdateAppliedEffects();
+    }
+
+    private void AddNewEffect ( TimeEffect timeEffect ) {
+
+        for ( int i = 0; i < currentEffects.Count; ++i ) {
+            if ( currentEffects[i].id == timeEffect.id) {
+                currentEffects.Remove( currentEffects[i] );
+            }
+        }
+        ApplyEffect( timeEffect );
+    }
+
+    private void ApplyEffect ( TimeEffect timeEffect ) {
+        effectsController.Buff( RemoveEffect, timeEffect );
+        UpdateAppliedEffects();
+    }
+
+    private void UpdateAppliedEffects () {
+        for ( int i = 0; i < currentEffects.Count; ++i ) {
+            currentCharacteristics += baseCharacteristics * currentEffects[i].characteristicsModifiers;
+        }
+    }
+
+    public virtual void GetDamage ( Influence influence ) {
+        currentHp -= (int)( influence.damage * (1 - currentCharacteristics.armor));
+        currentHp += (int) influence.healing;
 
         //-> targetController->View.Updatehp
         //->targetController.Hit->stateModel.Hit->( если возможно )->controller->view->HitAnimation
 
+        AddNewEffect( influence.timeEffect );
 
-        if ( damage.changeCharacteristics != null ) {
-            EffectsController.TimeEffect timeEffect = new EffectsController.TimeEffect();
-
-            timeEffect = damage.changeCharacteristics( baseCharacteristics );
-
-            currentCharacteristics = timeEffect.unitCharacteristics;
-
-            effectsController.Buff( TurnBackCharacteristics, timeEffect );
-        } 
-
-    }
-
-    public virtual void TurnBackCharacteristics (UnitCharacteristics bufCharacteristics ) {
-        currentCharacteristics.hp += bufCharacteristics.hp;
-        currentCharacteristics.armor += bufCharacteristics.armor;
-        currentCharacteristics.attack += bufCharacteristics.attack;
-        currentCharacteristics.attackSpeed += bufCharacteristics.attackSpeed;
-        currentCharacteristics.speed += bufCharacteristics.speed;
-        currentCharacteristics.attackRange += bufCharacteristics.attackRange;
     }
 
     public virtual float Attack {
@@ -86,6 +131,7 @@ public class BaseUnit : IUnit {
     public BaseUnit ( string name, UnitCharacteristics characteristics ) {
         this.name = name;
         baseCharacteristics = characteristics;
+        currentHp = baseCharacteristics.hp;
         UpdateCharacteristics(characteristics);
     }
 

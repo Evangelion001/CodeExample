@@ -30,7 +30,7 @@ public class BuildView :MonoBehaviour {
         [SerializeField]
         float trainingTime;
         [SerializeField]
-        public float hp;
+        public int hp;
         [SerializeField]
         [Range( 0, 1 )]
         public float armor;
@@ -58,7 +58,6 @@ public class BuildView :MonoBehaviour {
         unitCharacteristics.attackSpeed = baraksUnitConstructor[buildLevel].attackSpeed;
         unitCharacteristics.speed = baraksUnitConstructor[buildLevel].speed;
         unitCharacteristics.attackRange = baraksUnitConstructor[buildLevel].attackRange;
-        unitCharacteristics.faction = faction;
 
         return unitCharacteristics;
 
