@@ -140,6 +140,7 @@ public class BaseUnit : IUnit {
     }
 
     public BaseUnit ( string name, UnitCharacteristics characteristics, Spell[] spells, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics ) {
+        this.updateCharacteristicsDelegate = updateCharacteristics;
         this.name = name;
         baseCharacteristics = characteristics;
         currentHp = baseCharacteristics.hp;
@@ -147,7 +148,6 @@ public class BaseUnit : IUnit {
         this.spells = spells;
         this.faction = faction;
         this.effectsController = effectsController;
-        this.updateCharacteristicsDelegate = updateCharacteristics;
         Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 

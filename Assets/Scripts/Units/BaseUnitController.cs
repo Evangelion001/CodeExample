@@ -16,6 +16,8 @@ public class BaseUnitController {
         return baseUnitView.GetUnitViewPresenter();
     }
 
+    private NavMeshAgent tempNavMeshAgent;
+
     public BaseUnitController (EntityController.Select entityControllerSelect, UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, EntityController.GetTarget getTarget, EntityController.Faction faction ) {
 
         EffectsController effectsController = new EffectsController();
@@ -33,6 +35,8 @@ public class BaseUnitController {
         spells[0].healing = 0;
         spells[0].needTarget = false;
         spells[0].effect = effect;
+
+        tempNavMeshAgent = unitViewPresenter.navMeshAgent;
 
         this.entityControllerSelect = entityControllerSelect;
         baseUnitModel = new BaseUnit( "Unit", unitCharacteristics, spells, faction, effectsController, _UpdateCharacteristics );
@@ -77,7 +81,7 @@ public class BaseUnitController {
 
     private void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics ) {
 
-        baseUnitBehaviour.navMeshAgent.speed = newCharacteristics.speed;
+        tempNavMeshAgent.speed = newCharacteristics.speed;
 
     }
 

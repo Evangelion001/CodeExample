@@ -4,7 +4,7 @@ using System.Collections;
 
 public class BaseUnitBehaviour {
 
-    public NavMeshAgent navMeshAgent;
+    private NavMeshAgent navMeshAgent;
     private UnitViewPresenter targetViewPresenter;
     private UnitViewPresenter myViewPresenter;
     private Vector3 targetPosition;
