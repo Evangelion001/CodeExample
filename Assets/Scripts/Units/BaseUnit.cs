@@ -7,7 +7,8 @@ public class BaseUnit : IUnit {
     public enum UnitType {
         swordman,
         archer,
-        hero
+        hero,
+        bigMob
     }
 
     public delegate void DamageDelegate ( Influence damage );

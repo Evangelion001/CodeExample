@@ -71,6 +71,7 @@
      <Compile Include="Assets\Scripts\Effect.cs" />
      <Compile Include="Assets\Scripts\EffectsConstructor.cs" />
      <Compile Include="Assets\Scripts\FiniteStateMachine.cs" />
+     <Compile Include="Assets\Scripts\GameStateController.cs" />
      <Compile Include="Assets\Scripts\HUD\CenterUIController.cs" />
      <Compile Include="Assets\Scripts\HUD\CenterUIView.cs" />
      <Compile Include="Assets\Scripts\HUD\CenterUIViewPresenter.cs" />
