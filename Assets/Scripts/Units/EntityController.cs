@@ -60,22 +60,45 @@ public class EntityController {
 
         unitViewPresenter.GetPlayer( player );
 
-        BaseUnitController tempBaseUnitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
+        BaseUnitController unitController;
+
+        if ( unitViewPresenter.unityType == BaseUnit.UnitType.hero ) {
+            unitController = new HeroUnitController( SelectUnit, (HeroViewPresentor)unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
+        } else {
+            unitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
+        }
 
         if ( faction == Faction.Blue ) {
-            unitsControllersBlue.Add( tempBaseUnitController );
+            unitsControllersBlue.Add( unitController );
         } else {
-            unitsControllersRed.Add( tempBaseUnitController );
+            unitsControllersRed.Add( unitController );
         }
 
     }
 
-    public void DestroyUnit (BaseUnitController baseUnitController ) {
-        if ( unitsControllersBlue.Contains( baseUnitController ) ) {
-            unitsControllersBlue.Remove( baseUnitController );
+    public void SetTarget (UnitViewPresenter unit) {
+        foreach ( var key in unitsControllersSelectedBlue ) {
+            key.MoveToPosition( unit.transform.position );
         }
-        if ( unitsControllersRed.Contains( baseUnitController ) ) {
-            unitsControllersRed.Remove( baseUnitController );
+    }
+
+    public bool isSelected () {
+        if ( unitsControllersSelectedBlue.Count > 0 ) {
+            return true;
+        }
+        return false;
+    }
+
+    public void DestroyUnit (BaseUnitController unitController ) {
+        if ( unitsControllersSelectedBlue.Contains( unitController ) ) {
+            unitsControllersSelectedBlue.Remove( unitController );
+        }
+
+        if ( unitsControllersBlue.Contains( unitController ) ) {
+            unitsControllersBlue.Remove( unitController );
+        }
+        if ( unitsControllersRed.Contains( unitController ) ) {
+            unitsControllersRed.Remove( unitController );
         }
     }
 

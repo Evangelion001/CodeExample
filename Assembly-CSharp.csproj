@@ -92,6 +92,9 @@
      <Compile Include="Assets\Scripts\Units\EffectsController.cs" />
      <Compile Include="Assets\Scripts\Units\EntityController.cs" />
      <Compile Include="Assets\Scripts\Units\Hero\HeroUnit.cs" />
+     <Compile Include="Assets\Scripts\Units\Hero\HeroUnitController.cs" />
+     <Compile Include="Assets\Scripts\Units\Hero\HeroView.cs" />
+     <Compile Include="Assets\Scripts\Units\Hero\HeroViewPresentor.cs" />
      <Compile Include="Assets\Scripts\Units\IUnit.cs" />
      <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnly.cs" />

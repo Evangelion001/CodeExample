@@ -3,7 +3,7 @@ using System.Collections;
 
 public class BaseUnitView {
 
-    private UnitViewPresenter unitViewPresenter;
+    protected UnitViewPresenter unitViewPresenter;
 
     public void ShowSelectedEffect () {
         unitViewPresenter.ShowCircle();

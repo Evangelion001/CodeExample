@@ -12,13 +12,13 @@ public class BaseUnitController {
 
     private DeathDestroy updateDeath;
 
-    private BaseUnitView baseUnitView;
-    private BaseUnit baseUnitModel;
+    protected BaseUnitView unitView;
+    protected BaseUnit unitModel;
     private BaseUnitBehaviour baseUnitBehaviour;
     private AnimationController animationController;
 
     public UnitViewPresenter GetUnitViewPresenter () {
-        return baseUnitView.GetUnitViewPresenter();
+        return unitView.GetUnitViewPresenter();
     }
 
     private NavMeshAgent tempNavMeshAgent;
@@ -26,54 +26,25 @@ public class BaseUnitController {
     public BaseUnitController (EntityController.Select entityControllerSelect, UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, EntityController.GetTarget getTarget, EntityController.Faction faction, DeathDestroy updateDeath ) {
         this.updateDeath = updateDeath;
         animationController = new AnimationController( unitViewPresenter._animation );
-
+        //Get 1 from contructor
         EffectsController effectsController = new EffectsController();
-
-        GameObject freezeEffect = (GameObject)Resources.Load( "Prefabs/Particles/Freeze" );
-        Spell[] spells = new Spell[1];
-        spells[0] = new Spell();
-
-        Effect effect = new Effect( effectsController );
-        effect.characteristicsModifiers.attackSpeed = 0.5f;
-        effect.characteristicsModifiers.speed = 0.5f;
-        effect.visualPrefab = freezeEffect;
-
-        spells[0].aoeRadius = 0;
-        spells[0].attackRange = 1;
-        spells[0].damage = 15;
-        spells[0].healing = 0;
-        spells[0].needTarget = false;
-        spells[0].effect = effect;
 
         tempNavMeshAgent = unitViewPresenter.navMeshAgent;
 
         this.entityControllerSelect = entityControllerSelect;
         baseUnitBehaviour = new BaseUnitBehaviour( getTarget, faction, unitViewPresenter, animationController );
-        baseUnitModel = new BaseUnit( "Unit", unitCharacteristics, spells, faction, effectsController, _UpdateCharacteristics, UpdateDeath );
-        baseUnitView = new BaseUnitView( unitViewPresenter, Selected, baseUnitModel.GetDamage );
-
-        Influence influence = new Influence();
-        influence.damage = 10;
-        influence.healing = 0;
-
-        TimeEffect timeEffect = new TimeEffect( effectsController );
-        timeEffect.characteristicsModifiers.attackSpeed = 0.1f;
-        timeEffect.characteristicsModifiers.speed = 0.1f;
-        timeEffect.duration = 5;
-
-        influence.timeEffect = timeEffect;
-
-        //GetDamage( influence );
+        unitModel = new BaseUnit( "Unit", unitCharacteristics, faction, effectsController, _UpdateCharacteristics, UpdateDeath );
+        unitView = new BaseUnitView( unitViewPresenter, Selected, unitModel.GetDamage );
     }
 
     protected virtual void Selected () {
         entityControllerSelect( this );
-        baseUnitView.ShowSelectedEffect();
+        unitView.ShowSelectedEffect();
     }
 
     public virtual void Unselected () {
         Debug.Log( "Unselected: " );
-        baseUnitView.HideSelectedEffect();
+        unitView.HideSelectedEffect();
     }
 
     public virtual void MoveToPosition (Vector3 postion) {
@@ -81,10 +52,10 @@ public class BaseUnitController {
     }
 
     public void GetDamage (Influence influence ) {
-        baseUnitModel.GetDamage( influence );
+        unitModel.GetDamage( influence );
     }
 
-    private void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics, Influence influence ) {
+    protected void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics, Influence influence ) {
 
         tempNavMeshAgent.speed = newCharacteristics.speed;
         baseUnitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
@@ -92,9 +63,9 @@ public class BaseUnitController {
 
     }
 
-    private void UpdateDeath () {
+    protected void UpdateDeath () {
         baseUnitBehaviour.CallDeathFSMEvent();
-        GameObject.Destroy( baseUnitView.GetUnitViewPresenter().gameObject );
+        GameObject.Destroy( unitView.GetUnitViewPresenter().gameObject );
         updateDeath(this);
         Debug.Log( "Daeth" );
     }

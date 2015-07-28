@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Player {
 
+    public delegate void GetGold(int gold);
+
     private CenterUIView cuiv;
 
     public Player () {

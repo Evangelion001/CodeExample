@@ -68,8 +68,6 @@ public class BaseUnit : IUnit {
     private int gold = 100;
     private int xp = 100;
 
-    //FIXME Move to hero
-    private Spell[] spells;
     BaseUnitController.UpdateCharacteristics updateCharacteristicsDelegate;
 
     public EntityController.Faction GetFaction () {
@@ -136,7 +134,7 @@ public class BaseUnit : IUnit {
                 currentHp = 0;
                 if ( influence.owner.unityType == UnitType.hero ) {
                     influence.owner.GetGold( gold );
-                    influence.owner.GetXP( xp );
+                    ((HeroViewPresentor)influence.owner).GetXP( xp );
                 }
                 updateDeath();
             }
@@ -166,13 +164,12 @@ public class BaseUnit : IUnit {
         updateCharacteristicsDelegate( currentCharacteristics, GetInfluence() );
     }
 
-    public BaseUnit ( string name, UnitCharacteristics characteristics, Spell[] spells, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics, BaseUnitController.Death updateDeath ) {
+    public BaseUnit ( string name, UnitCharacteristics characteristics, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics, BaseUnitController.Death updateDeath ) {
         this.updateCharacteristicsDelegate = updateCharacteristics;
         this.updateDeath = updateDeath;
         this.name = name;
         baseCharacteristics = characteristics;
         currentHp = baseCharacteristics.hp;
-        this.spells = spells;
         this.faction = faction;
         this.effectsController = effectsController;
         UpdateCharacteristics( baseCharacteristics );

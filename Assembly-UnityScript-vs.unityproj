@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{70E2DD62-E81D-7245-6333-A0A55ABC6790}</ProjectGuid>
+	<ProjectGuid>{238D279C-EDE9-6E9B-8C67-F26FD242BF48}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<AssemblyName>Assembly-UnityScript</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
 	<BaseDirectory>Assets</BaseDirectory>
@@ -46,59 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Lib\Stateless\DynamicTriggerBehaviour.cs" />
-     <Compile Include="Assets\Lib\Stateless\Enforce.cs" />
-     <Compile Include="Assets\Lib\Stateless\IgnoredTriggerBehaviour.cs" />
-     <Compile Include="Assets\Lib\Stateless\ParameterConversion.cs" />
-     <Compile Include="Assets\Lib\Stateless\ParameterConversionResources.Designer.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateConfiguration.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateConfigurationResources.Designer.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateMachine.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateMachineResources.Designer.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateReference.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateRepresentation.cs" />
-     <Compile Include="Assets\Lib\Stateless\StateRepresentationResources.Designer.cs" />
-     <Compile Include="Assets\Lib\Stateless\Transition.cs" />
-     <Compile Include="Assets\Lib\Stateless\TransitioningTriggerBehaviour.cs" />
-     <Compile Include="Assets\Lib\Stateless\TriggerBehaviour.cs" />
-     <Compile Include="Assets\Lib\Stateless\TriggerWithParameters.cs" />
-     <Compile Include="Assets\Scripts\Buildings\BuildController.cs" />
-     <Compile Include="Assets\Scripts\Buildings\BuildModel.cs" />
-     <Compile Include="Assets\Scripts\Buildings\BuildView.cs" />
-     <Compile Include="Assets\Scripts\CameraMotion.cs" />
-     <Compile Include="Assets\Scripts\CoroutineManager.cs" />
-     <Compile Include="Assets\Scripts\CreepAI.cs" />
-     <Compile Include="Assets\Scripts\Effect.cs" />
-     <Compile Include="Assets\Scripts\EffectsConstructor.cs" />
-     <Compile Include="Assets\Scripts\FiniteStateMachine.cs" />
-     <Compile Include="Assets\Scripts\GameStateController.cs" />
-     <Compile Include="Assets\Scripts\HUD\CenterUIController.cs" />
-     <Compile Include="Assets\Scripts\HUD\CenterUIView.cs" />
-     <Compile Include="Assets\Scripts\HUD\CenterUIViewPresenter.cs" />
-     <Compile Include="Assets\Scripts\Influence.cs" />
-     <Compile Include="Assets\Scripts\InputController.cs" />
-     <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\SceneManager.cs" />
-     <Compile Include="Assets\Scripts\Singleton.cs" />
-     <Compile Include="Assets\Scripts\Spawn.cs" />
-     <Compile Include="Assets\Scripts\Spell.cs" />
-     <Compile Include="Assets\Scripts\Test.cs" />
-     <Compile Include="Assets\Scripts\TimeEffect.cs" />
-     <Compile Include="Assets\Scripts\Units\AnimationController.cs" />
-     <Compile Include="Assets\Scripts\Units\BaseUnit.cs" />
-     <Compile Include="Assets\Scripts\Units\BaseUnitBehaviour.cs" />
-     <Compile Include="Assets\Scripts\Units\BaseUnitController.cs" />
-     <Compile Include="Assets\Scripts\Units\BaseUnitView.cs" />
-     <Compile Include="Assets\Scripts\Units\EffectsController.cs" />
-     <Compile Include="Assets\Scripts\Units\EntityController.cs" />
-     <Compile Include="Assets\Scripts\Units\Hero\HeroUnit.cs" />
-     <Compile Include="Assets\Scripts\Units\Hero\HeroUnitController.cs" />
-     <Compile Include="Assets\Scripts\Units\Hero\HeroView.cs" />
-     <Compile Include="Assets\Scripts\Units\Hero\HeroViewPresentor.cs" />
-     <Compile Include="Assets\Scripts\Units\IUnit.cs" />
-     <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
-     <Compile Include="Assets\UnityEditor\ReadOnly.cs" />
-     <Compile Include="Assets\UnityEditor\ReadOnlyAttribute.cs" />
+     <Compile Include="Assets\KY_effects\Script\ConGUI.js" />
+     <Compile Include="Assets\KY_effects\Script\Lighting.js" />
+     <None Include="Assets\KY_effects\MagicEffectsPackFree\ReadMe.txt" />
      <None Include="Assets\Resources\SkeletonData\animations.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

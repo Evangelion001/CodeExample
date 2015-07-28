@@ -16,6 +16,8 @@ public class InputController : MonoBehaviour {
 
     public Player player;
 
+    private bool hadSelected = false;
+
     void Start () {
 
         player = new Player();
@@ -31,6 +33,9 @@ public class InputController : MonoBehaviour {
     void Update () {
         if ( Input.GetMouseButtonDown( 0 ) ) {
             MoveAtClickedPosition();
+        }
+        if ( Input.GetMouseButtonDown( 1 ) ) {
+            SetTargetByClick();
         }
     }
 
@@ -53,6 +58,24 @@ public class InputController : MonoBehaviour {
 
         }
 
+    }
+
+    private void SetTargetByClick () {
+
+        Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
+        RaycastHit hit;
+
+        if ( Physics.Raycast( ray, out hit ) ) {
+
+            switch ( hit.transform.gameObject.tag ) {
+                case "Unit":
+                    if ( entityController.isSelected() ) {
+                        entityController.SetTarget( hit.transform.gameObject.GetComponent<UnitViewPresenter>() );
+                    }
+                    break;
+            }
+
+        }
     }
 
 }

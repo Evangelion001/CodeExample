@@ -45,9 +45,4 @@ public class UnitViewPresenter : MonoBehaviour {
         player.Gold = gold;
     }
 
-    public void GetXP ( int xp ) {
-        //FIXME rename method
-        Debug.Log( "You get " + xp + " XP" );
-    }
-
 }
