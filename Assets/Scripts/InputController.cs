@@ -6,8 +6,6 @@ public class InputController : MonoBehaviour {
 
     public GameObject tagret;
 
-    private CenterUIView cuiv;
-
     private EntityController entityController;
 
     private GameStateController gameStateController;
@@ -16,11 +14,12 @@ public class InputController : MonoBehaviour {
 
     public Text timerValue;
 
-    void Start () {
-        cuiv = new CenterUIView();
-        cuiv.centerUIViewPresenter = FindObjectOfType<CenterUIViewPresenter>();
+    public Player player;
 
-        entityController = new EntityController();
+    void Start () {
+
+        player = new Player();
+        entityController = new EntityController( player );
         gameStateController = new GameStateController( entityController, _UpdateWaveTimer );
 
     }
@@ -49,10 +48,6 @@ public class InputController : MonoBehaviour {
                 case "Unit":
                     entityController.UnselectUints();
                     hit.transform.gameObject.GetComponent<UnitViewPresenter>().Select();
-
-                    //FIXME move to anather place for cuiv methods;
-                    cuiv.RemoveIcons();
-                    cuiv.AddHeroIcon();
                     break;
             }
 

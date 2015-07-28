@@ -28,4 +28,8 @@ public class CenterUIView {
         }
     }
 
+    public void UpdateGold (int gold) {
+        centerUIViewPresenter.goldValue.text = gold.ToString();
+    }
+
 }

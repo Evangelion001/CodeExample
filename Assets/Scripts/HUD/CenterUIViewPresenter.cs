@@ -9,4 +9,6 @@ public class CenterUIViewPresenter : MonoBehaviour {
 
     public GameObject prefabSwordIconPrefab;
 
+    public Text goldValue;
+
 }

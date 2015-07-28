@@ -77,6 +77,7 @@
      <Compile Include="Assets\Scripts\HUD\CenterUIViewPresenter.cs" />
      <Compile Include="Assets\Scripts\Influence.cs" />
      <Compile Include="Assets\Scripts\InputController.cs" />
+     <Compile Include="Assets\Scripts\Player.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
      <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\Spawn.cs" />
@@ -88,9 +89,9 @@
      <Compile Include="Assets\Scripts\Units\BaseUnitBehaviour.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitController.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitView.cs" />
-     <Compile Include="Assets\Scripts\Units\CreepUnit.cs" />
      <Compile Include="Assets\Scripts\Units\EffectsController.cs" />
      <Compile Include="Assets\Scripts\Units\EntityController.cs" />
+     <Compile Include="Assets\Scripts\Units\Hero\HeroUnit.cs" />
      <Compile Include="Assets\Scripts\Units\IUnit.cs" />
      <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnly.cs" />

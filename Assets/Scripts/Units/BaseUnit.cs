@@ -64,6 +64,9 @@ public class BaseUnit : IUnit {
     private EffectsController effectsController;
     private List<Effect> currentEffects = new List<Effect>();
     private BaseUnitController.Death updateDeath;
+    //FIXME add to Characteristics
+    private int gold = 100;
+    private int xp = 100;
 
     //FIXME Move to hero
     private Spell[] spells;
@@ -103,13 +106,11 @@ public class BaseUnit : IUnit {
     private void ApplyEffect ( TimeEffect timeEffect ) {
         effectsController.AddCoroutineToEffect( RemoveEffect, timeEffect );
         UpdateAppliedEffects();
-        Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
     private void UpdateAppliedEffects () {
         UnitCharacteristics tempCharacteristics = baseCharacteristics;
         for ( int i = 0; i < currentEffects.Count; ++i ) {
-            Debug.Log( "currentEffects[i].characteristicsModifiers: " + currentEffects[i].characteristicsModifiers );
             tempCharacteristics = baseCharacteristics * currentEffects[i].characteristicsModifiers;
         }
         UpdateCharacteristics( tempCharacteristics );
@@ -125,20 +126,27 @@ public class BaseUnit : IUnit {
     }
 
     public virtual void GetDamage ( Influence influence ) {
-        currentHp -= (int)( influence.damage * (1 - currentCharacteristics.armor));
-        currentHp += (int) influence.healing;
+        if ( currentHp > 0 ) {
+            currentHp -= (int)( influence.damage * ( 1 - currentCharacteristics.armor ) );
+            currentHp += (int)influence.healing;
 
-        Debug.Log( "currentHp: " + currentHp );
+            //Debug.Log( "currentHp: " + currentHp );
 
-        if ( currentHp <= 0 ) {
-            currentHp = 0;
-            updateDeath();
+            if ( currentHp <= 0 ) {
+                currentHp = 0;
+                if ( influence.owner.unityType == UnitType.hero ) {
+                    influence.owner.GetGold( gold );
+                    influence.owner.GetXP( xp );
+                }
+                updateDeath();
+            }
+            //-> targetController->View.Updatehp
+            //->targetController.Hit->stateModel.Hit->( если возможно )->controller->view->HitAnimation
+
+            if ( influence.timeEffect != null ) {
+                AddEffect( influence.timeEffect );
+            }
         }
-        //-> targetController->View.Updatehp
-        //->targetController.Hit->stateModel.Hit->( если возможно )->controller->view->HitAnimation
-
-        AddEffect( influence.timeEffect );
-
     }
 
     public virtual float Attack {
@@ -168,7 +176,6 @@ public class BaseUnit : IUnit {
         this.faction = faction;
         this.effectsController = effectsController;
         UpdateCharacteristics( baseCharacteristics );
-        Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
 

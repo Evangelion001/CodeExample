@@ -37,7 +37,6 @@ public class GameStateController {
     }
 
     private void NextWave () {
-        Debug.Log( "NextWave" );
         --waveCounter;
 
         if ( waveCounter > 0 ) {

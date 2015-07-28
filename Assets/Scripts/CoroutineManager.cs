@@ -12,6 +12,20 @@ public class CoroutineManager : MonoBehaviour {
 
     private int counter = 0;
 
+    public int InvokeAttack ( Action attackCd, float timer ) {
+        ++counter;
+        IEnumerator tempIEnumerator = _InvokeAttack( attackCd, timer );
+        currentCoroutines.Add( counter, tempIEnumerator );
+        StartCoroutine( tempIEnumerator );
+        return counter;
+    }
+
+    private IEnumerator _InvokeAttack ( Action attackCd, float timer ) {
+        yield return new WaitForSeconds( timer );
+        attackCd();
+        yield return null;
+    }
+
     public int InvokeBuf ( EffectsController.RemoveCoroutineEffect  removeEffect, TimeEffect timeEffect ) {
         ++counter;
         IEnumerator tempIEnumerator = _InvokeBuf( removeEffect, timeEffect );
@@ -66,10 +80,6 @@ public class CoroutineManager : MonoBehaviour {
     public void StopInvoke ( int iEnumeratorId ) {
         StopCoroutine( currentCoroutines[iEnumeratorId] );
         currentCoroutines.Remove( iEnumeratorId );
-    }
-
-    public void StopInvoke ( UnityEngine.Object startedIEnumerator ) {
-        StopCoroutine( (IEnumerator)startedIEnumerator );
     }
 
 }

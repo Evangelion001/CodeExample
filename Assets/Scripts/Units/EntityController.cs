@@ -46,14 +46,19 @@ public class EntityController {
     private List<BaseUnitController> unitsControllersSelectedRed;
     private List<BaseUnitController> unitsControllersSelectedBlue;
 
-    public EntityController () {
+    Player player;
+
+    public EntityController ( Player player) {
         unitsControllersBlue = new List<BaseUnitController>();
         unitsControllersRed = new List<BaseUnitController>();
         unitsControllersSelectedRed = new List<BaseUnitController>();
         unitsControllersSelectedBlue = new List<BaseUnitController>();
+        this.player = player;
     }
 
     public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction ) {
+
+        unitViewPresenter.GetPlayer( player );
 
         BaseUnitController tempBaseUnitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
 

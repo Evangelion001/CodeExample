@@ -64,6 +64,7 @@ public class BaseUnitBehaviour {
         fsm.SetStateExit( FiniteStateMachine.States.Action, StopAttack );
 
         fsm.SetStateEntery( FiniteStateMachine.States.Dead, OnDeadEnter );
+        fsm.SetStatePermit( FiniteStateMachine.States.Dead, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
 
         fsm.CallEvent( FiniteStateMachine.Events.Start );
     }
@@ -115,14 +116,13 @@ public class BaseUnitBehaviour {
             return;
         }
 
-        if ( navMeshAgent.pathEndPosition != targetViewPresenter.transform.position ) {
+        if ( targetViewPresenter != null && navMeshAgent.pathEndPosition != targetViewPresenter.transform.position ) {
             navMeshAgent.ResetPath();
             navMeshAgent.SetDestination( targetViewPresenter.transform.position );
         }
     }
 
     private void StartIdle () {
-        Debug.Log( "StartIdle" );
         animationController.IdleAnimation();
         targetViewPresenter = null;
         navMeshAgent.ResetPath();
@@ -139,17 +139,21 @@ public class BaseUnitBehaviour {
     }
 
     private void UpdateAttack () {
-        if ( Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > attackRange ) {
+        //Debug.Log( "UpdateAttack " + myViewPresenter.name );
+        if ( targetViewPresenter == null || Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             //fsm.Fire( Trigger.TargetLost );
             return;
         }
 
+        myViewPresenter.transform.LookAt( targetViewPresenter.transform.position );
+
         if ( canAttack ) {
             animationController.AttackAnimation();
+            influence.owner = myViewPresenter;
             targetViewPresenter.GetDamage( influence );
             canAttack = false;
-            SceneManager.Instance.CoroutineManager.Invoke( "EndOfDelayAttack", attackSpeed );
+            SceneManager.Instance.CoroutineManager.InvokeAttack( EndOfDelayAttack, attackSpeed );
         }
 
     }
@@ -172,7 +176,9 @@ public class BaseUnitBehaviour {
     }
 
     private void StartAttack () {
-        myViewPresenter.transform.LookAt( targetViewPresenter.transform.position );
+        if ( targetViewPresenter != null ) {
+            myViewPresenter.transform.LookAt( targetViewPresenter.transform.position );
+        }
     }
 
     private void StopAttack () {
@@ -183,7 +189,7 @@ public class BaseUnitBehaviour {
     }
 
     private void OnDeadEnter () {
-        Debug.Log( "OnDeadEnter" );
+        Debug.Log( "OnDeadEnter " + myViewPresenter.transform.name );
     }
 
 }

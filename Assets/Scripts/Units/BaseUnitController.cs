@@ -63,7 +63,7 @@ public class BaseUnitController {
 
         influence.timeEffect = timeEffect;
 
-        GetDamage( influence );
+        //GetDamage( influence );
     }
 
     protected virtual void Selected () {
