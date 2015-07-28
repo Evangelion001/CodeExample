@@ -40,15 +40,23 @@ public class BaseUnitController {
     protected virtual void Selected () {
         entityControllerSelect( this );
         unitView.ShowSelectedEffect();
+        baseUnitBehaviour.isSelected = true;
+        baseUnitBehaviour.ShowTarget();
     }
 
     public virtual void Unselected () {
         Debug.Log( "Unselected: " );
         unitView.HideSelectedEffect();
+        baseUnitBehaviour.isSelected = false;
+        baseUnitBehaviour.HideTarget();
     }
 
     public virtual void MoveToPosition (Vector3 postion) {
         baseUnitBehaviour.SetTargetPosition( postion );
+    }
+
+    public virtual void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
+        baseUnitBehaviour.SetPlayerTarget( unitViewPresenter );
     }
 
     public void GetDamage (Influence influence ) {

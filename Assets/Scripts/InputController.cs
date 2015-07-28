@@ -46,10 +46,6 @@ public class InputController : MonoBehaviour {
         if ( Physics.Raycast( ray, out hit ) ) {
 
             switch ( hit.transform.gameObject.tag ) {
-                case "Ground":
-                    tagret.transform.position = hit.point;
-                    entityController.MoveToPosition( hit.point );
-                    break;
                 case "Unit":
                     entityController.UnselectUints();
                     hit.transform.gameObject.GetComponent<UnitViewPresenter>().Select();
@@ -68,6 +64,10 @@ public class InputController : MonoBehaviour {
         if ( Physics.Raycast( ray, out hit ) ) {
 
             switch ( hit.transform.gameObject.tag ) {
+                case "Ground":
+                    tagret.transform.position = hit.point;
+                    entityController.MoveToPosition( hit.point );
+                    break;
                 case "Unit":
                     if ( entityController.isSelected() ) {
                         entityController.SetTarget( hit.transform.gameObject.GetComponent<UnitViewPresenter>() );

@@ -78,7 +78,7 @@ public class EntityController {
 
     public void SetTarget (UnitViewPresenter unit) {
         foreach ( var key in unitsControllersSelectedBlue ) {
-            key.MoveToPosition( unit.transform.position );
+            key.SetPlayerTarget( unit );
         }
     }
 

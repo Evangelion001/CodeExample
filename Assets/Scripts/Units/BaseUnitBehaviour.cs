@@ -16,6 +16,8 @@ public class BaseUnitBehaviour {
     private float attackRange = 0;
     private Influence influence;
     private bool canAttack = true;
+    private UnitViewPresenter playerTarget = null; 
+    public bool isSelected = false;
 
     //private StateMachine<State, Trigger> fsm = new StateMachine<State, Trigger>( State.Empty );
 
@@ -28,6 +30,18 @@ public class BaseUnitBehaviour {
         InitStateMachine();
     }
 
+    public void ShowTarget () {
+        if ( targetViewPresenter != null && isSelected ) {
+            targetViewPresenter.ShowTarget();
+        }
+    }
+
+    public void HideTarget () {
+        if ( targetViewPresenter != null ) {
+            targetViewPresenter.HideTarget();
+        }
+    }
+
     private void InitStateMachine () {
 
         fsm = new FiniteStateMachine();
@@ -37,6 +51,7 @@ public class BaseUnitBehaviour {
         fsm.SetStateEntery( FiniteStateMachine.States.Path, StartMove );
         fsm.AddStateUpdate( FiniteStateMachine.States.Path, UpdateFindGroundPosition, 0.1f );
         fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Idle );
+        fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.TargetFound, FiniteStateMachine.States.FollowTarget );
         fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
         fsm.SetStatePermit( FiniteStateMachine.States.Path, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
         fsm.SetStateExit( FiniteStateMachine.States.Path, StopMoving );
@@ -80,14 +95,26 @@ public class BaseUnitBehaviour {
         navMeshAgent.ResetPath();
         navMeshAgent.SetDestination( targetPosition );
     }
- 
+
+    public void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
+        playerTarget = unitViewPresenter;
+        fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
+        HideTarget();
+    }
+
     private void UpdateFindTarget () {
 
         UnitViewPresenter tempTarget = GetTargetDelegate( myFaction, myViewPresenter );
 
+        if ( playerTarget != null ) {
+            tempTarget = playerTarget;
+        }
+
         if ( tempTarget != targetViewPresenter ) {
+            HideTarget();
             targetViewPresenter = tempTarget;
             if ( targetViewPresenter != null ) {
+                ShowTarget();
                 fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
                 //fsm.Fire( Trigger.TargetFound );
             }
