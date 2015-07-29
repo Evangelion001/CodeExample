@@ -28,7 +28,9 @@ public class BuildView :MonoBehaviour {
     public class BaraksUnitConstructor {
 
         [SerializeField]
-        float trainingTime;
+        public int upgradeCost;
+        [SerializeField]
+        public float trainingTime;
         [SerializeField]
         public int hp;
         [SerializeField]

@@ -4,6 +4,8 @@ public class HeroUnit : BaseUnit {
 
     public delegate void GetXpDelegate( int xp );
 
+    private HeroUnitController.LevelUpEffectDelegate levelUpEffect;
+
     int[] xpLevels = { 100, 200, 300, 400, 500 };
     int freeAbilityPoints = 1;
     int currentLevel = 0;
@@ -16,7 +18,8 @@ public class HeroUnit : BaseUnit {
         EntityController.Faction faction, 
         EffectsController effectsController, 
         BaseUnitController.UpdateCharacteristics updateCharacteristics, 
-        BaseUnitController.Death updateDeath ) : base( name, characteristics, faction, effectsController, updateCharacteristics, updateDeath ) {
+        BaseUnitController.Death updateDeath, HeroUnitController.LevelUpEffectDelegate levelUpEffect ) : base( name, characteristics, faction, effectsController, updateCharacteristics, updateDeath ) {
+        this.levelUpEffect = levelUpEffect;
 
     }
 
@@ -30,6 +33,7 @@ public class HeroUnit : BaseUnit {
                 ++freeAbilityPoints;
                 if ( currentLevel < ( xpLevels.Length - 1 ) ) {
                     ++currentLevel;
+                    levelUpEffect();
                 }
             }
         }

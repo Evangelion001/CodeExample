@@ -9,4 +9,8 @@ public class HeroView : BaseUnitView {
         unitViewPresenter.AddXpDelegate( GetXpDelegate );
     }
 
+    public void ShowLevelUp () {
+        ( (HeroViewPresentor)unitViewPresenter ).levelUpEffect.Play();
+    }
+
 }

@@ -5,6 +5,8 @@ public class HeroViewPresentor : UnitViewPresenter {
 
     private HeroUnit.GetXpDelegate GetXpDelegate;
 
+    public ParticleSystem levelUpEffect;
+
     public void AddXpDelegate ( HeroUnit.GetXpDelegate GetXpDelegate ) {
         this.GetXpDelegate = GetXpDelegate;
     }

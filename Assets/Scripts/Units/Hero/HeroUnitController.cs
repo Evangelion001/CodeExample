@@ -3,6 +3,8 @@ using System.Collections;
 
 public class HeroUnitController : BaseUnitController {
 
+    public delegate void LevelUpEffectDelegate ();
+
     public HeroUnitController ( EntityController.Select entityControllerSelect, 
         HeroViewPresentor unitViewPresenter, 
         BaseUnit.UnitCharacteristics unitCharacteristics, 
@@ -12,7 +14,7 @@ public class HeroUnitController : BaseUnitController {
 
         EffectsController effectsController = new EffectsController();
 
-        unitModel = new HeroUnit( "Unit", unitCharacteristics, SpellInit( effectsController ), faction, effectsController, _UpdateCharacteristics, UpdateDeath );
+        unitModel = new HeroUnit( "Unit", unitCharacteristics, SpellInit( effectsController ), faction, effectsController, _UpdateCharacteristics, UpdateDeath, LevelUpEffect );
         unitView = new HeroView( unitViewPresenter, Selected, unitModel.GetDamage, ((HeroUnit)unitModel).GetXp );
     }
 
@@ -36,6 +38,10 @@ public class HeroUnitController : BaseUnitController {
         spells[0].effect = effect;
 
         return spells;
+    }
+
+    public void LevelUpEffect () {
+        ((HeroView)unitView ).ShowLevelUp();
     }
 
 }

@@ -19,6 +19,14 @@ public class CenterUIViewPresenter : MonoBehaviour {
     public Sprite archerIcon;
 
     public GameObject unitIconPrefab;
+    public GameObject actionButtonPrefab;
 
+    public GameObject BaraksPanel;
+    public Text buildTitle;
+    public Text unitType;
+    public Text timeRecruitment;
+    public Text updateCost;
+    public Image unitIcon;
+    public Image readyIndicator;
 
 }

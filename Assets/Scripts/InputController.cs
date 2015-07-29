@@ -48,11 +48,23 @@ public class InputController : MonoBehaviour {
             switch ( hit.transform.gameObject.tag ) {
                 case "Ground":
                     entityController.UnselectUints();
+                    player.HideActionButtons();
+                    player.HideUnitIcon();
                     break;
                 case "Unit":
                     entityController.UnselectUints();
+                    player.HideActionButtons();
+                    player.HideUnitIcon();
+                    //FIXME add input array targets;
                     player.ShowUnitsIcon( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType);
+                    player.ShowActionButtons( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType );
                     hit.transform.gameObject.GetComponent<UnitViewPresenter>().Select();
+                    break;
+                case "Build":
+                    player.HideActionButtons();
+                    player.HideUnitIcon();
+                    BuildView temp = hit.transform.gameObject.GetComponent<BuildView>();
+                    player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].traingTime, int updateCost )
                     break;
             }
 
