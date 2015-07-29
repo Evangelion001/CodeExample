@@ -49,6 +49,11 @@ public class BuildView :MonoBehaviour {
 
     }
 
+    public BaseUnit.UnitCharacteristics UpgradeBuilding () {
+        ++buildLevel;
+        return GetUnit();
+    }
+
     public BaseUnit.UnitCharacteristics GetUnit () {
         BaseUnit.UnitCharacteristics unitCharacteristics = new BaseUnit.UnitCharacteristics();
 

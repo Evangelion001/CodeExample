@@ -125,7 +125,6 @@ public class EntityController {
     private void SelectUnit (BaseUnitController selectedUnit) {
         unitsControllersSelectedBlue.Clear();
         unitsControllersSelectedBlue.Add(selectedUnit);
-        Debug.Log( "SelectUnit" );
     }
 
 }

@@ -32,22 +32,26 @@ public class InputController : MonoBehaviour {
 
     void Update () {
         if ( Input.GetMouseButtonDown( 0 ) ) {
-            MoveAtClickedPosition();
+            SelectClick();
         }
         if ( Input.GetMouseButtonDown( 1 ) ) {
             SetTargetByClick();
         }
     }
 
-    private void MoveAtClickedPosition () {
+    private void SelectClick () {
         Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
         RaycastHit hit;
 
         if ( Physics.Raycast( ray, out hit ) ) {
 
             switch ( hit.transform.gameObject.tag ) {
+                case "Ground":
+                    entityController.UnselectUints();
+                    break;
                 case "Unit":
                     entityController.UnselectUints();
+                    player.ShowUnitsIcon( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType);
                     hit.transform.gameObject.GetComponent<UnitViewPresenter>().Select();
                     break;
             }

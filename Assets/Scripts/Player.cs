@@ -8,16 +8,27 @@ public class Player {
     private CenterUIView cuiv;
 
     public Player () {
-        cuiv = new CenterUIView();
-        cuiv.centerUIViewPresenter = GameObject.FindObjectOfType<CenterUIViewPresenter>();
+        cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>() );
     }
 
-    public void ShowUnitsIcon () {
-        cuiv.AddHeroIcon();
+    public void ShowUnitsIcon (BaseUnit.UnitType unitType) {
+
+        switch ( unitType ) {
+            case BaseUnit.UnitType.swordman:
+                cuiv.AddSwordIcon();
+                break;
+            case BaseUnit.UnitType.hero:
+                cuiv.AddHeroIcon();
+                break;
+            case BaseUnit.UnitType.archer:
+                cuiv.AddArcherIcon();
+                break;
+        }
+
     }
 
     public void HideUnitIcon () {
-        cuiv.RemoveIcons();
+        cuiv.UnselectUnits();
     }
 
     private int gold = 0;

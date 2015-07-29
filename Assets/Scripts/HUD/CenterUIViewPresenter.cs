@@ -3,12 +3,22 @@ using UnityEngine.UI;
 
 public class CenterUIViewPresenter : MonoBehaviour {
 
+    public Text goldValue;
+
     public GridLayoutGroup gridUnitIcons;
 
-    public GameObject prefabHeroIconPrefab;
+    public GameObject actionButtonGrid;
 
-    public GameObject prefabSwordIconPrefab;
+    public Sprite iceBoltIcon;
+    public Sprite meteorShawerIcon;
+    public Sprite upgradeAbilityIcon;
+    public Sprite levelUpIcon;
 
-    public Text goldValue;
+    public Sprite heroIcon;
+    public Sprite swordIcon;
+    public Sprite archerIcon;
+
+    public GameObject unitIconPrefab;
+
 
 }

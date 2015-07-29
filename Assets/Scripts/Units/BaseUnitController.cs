@@ -45,7 +45,6 @@ public class BaseUnitController {
     }
 
     public virtual void Unselected () {
-        Debug.Log( "Unselected: " );
         unitView.HideSelectedEffect();
         baseUnitBehaviour.isSelected = false;
         baseUnitBehaviour.HideTarget();

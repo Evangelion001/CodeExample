@@ -1,35 +1,48 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class CenterUIView {
 
-    public CenterUIViewPresenter centerUIViewPresenter;
+    private CenterUIViewPresenter uiViewPresenter;
 
-    public GameObject[] iconArray = new GameObject[14];
-
-    private void AddIconOnGrid (GameObject iconPrefab) {
-        GameObject temp = (GameObject)GameObject.Instantiate( iconPrefab );
-
-        temp.transform.SetParent( centerUIViewPresenter.gridUnitIcons.transform, false );
-
-        iconArray[0] = temp;
+    public void UpdateGold (int gold) {
+        uiViewPresenter.goldValue.text = gold.ToString();
     }
 
-    public void AddSwordIcon () {
-        AddIconOnGrid( centerUIViewPresenter.prefabSwordIconPrefab );
-    }
+    private int selectUnitCounter = 0;
 
-    public void AddHeroIcon () {
-        AddIconOnGrid( centerUIViewPresenter.prefabHeroIconPrefab );
-    }
-
-    public void RemoveIcons () {
-        foreach ( var key in iconArray ) {
-            GameObject.Destroy(key);
+    public CenterUIView ( CenterUIViewPresenter uiViewPresenter ) {
+        this.uiViewPresenter = uiViewPresenter;
+        unitIconArray = new GameObject[14];
+        for ( int i = 0; i < unitIconArray.Length; ++i ) {
+            unitIconArray[i] = GameObject.Instantiate( uiViewPresenter.unitIconPrefab );
+            unitIconArray[i].transform.SetParent( uiViewPresenter.gridUnitIcons.transform, false );
+            unitIconArray[i].SetActive( false );
         }
     }
 
-    public void UpdateGold (int gold) {
-        centerUIViewPresenter.goldValue.text = gold.ToString();
+    private GameObject[] unitIconArray;
+
+    public void AddSwordIcon () {
+        unitIconArray[selectUnitCounter].SetActive( true );
+        unitIconArray[selectUnitCounter].GetComponent<Image>().sprite = uiViewPresenter.swordIcon;
+    }
+
+    public void AddHeroIcon () {
+        unitIconArray[selectUnitCounter].SetActive( true );
+        unitIconArray[selectUnitCounter].GetComponent<Image>().sprite = uiViewPresenter.heroIcon;
+    }
+
+    public void AddArcherIcon () {
+        unitIconArray[selectUnitCounter].SetActive( true );
+        unitIconArray[selectUnitCounter].GetComponent<Image>().sprite = uiViewPresenter.archerIcon;
+    }
+
+    public void UnselectUnits () {
+        for ( int i = 0; i < selectUnitCounter; ++i ) {
+            unitIconArray[selectUnitCounter].SetActive( false );
+        }
+        selectUnitCounter = 0;
     }
 
 }

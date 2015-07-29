@@ -13,8 +13,7 @@ public class Test : MonoBehaviour {
 
     void Start () {
         cameraStartDistance =  new Vector3(0,10,-15);
-        cuiv = new CenterUIView();
-        cuiv.centerUIViewPresenter = FindObjectOfType<CenterUIViewPresenter>();
+        cuiv = new CenterUIView( FindObjectOfType<CenterUIViewPresenter>() );
     }
 
     void Update () {
