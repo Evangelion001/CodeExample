@@ -98,8 +98,6 @@
      <Compile Include="Assets\Scripts\Units\Hero\HeroViewPresentor.cs" />
      <Compile Include="Assets\Scripts\Units\IUnit.cs" />
      <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
-     <Compile Include="Assets\SelectionBox\Code\ExampleSelectable.cs" />
-     <Compile Include="Assets\SelectionBox\Code\UnityEngine.UI.Extensions NameSpace\IBoxSelectable.cs" />
      <Compile Include="Assets\SelectionBox\Code\UnityEngine.UI.Extensions NameSpace\SelectionBox.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnly.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnlyAttribute.cs" />

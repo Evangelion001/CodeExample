@@ -38,10 +38,11 @@ public class BaseUnitController {
     }
 
     protected virtual void Selected () {
-        entityControllerSelect( this, unitModel.GetFaction() );
-        unitView.ShowSelectedEffect();
-        baseUnitBehaviour.isSelected = true;
-        baseUnitBehaviour.ShowTarget();
+        if ( entityControllerSelect( this, unitModel.GetFaction() ) ) {
+            unitView.ShowSelectedEffect();
+            baseUnitBehaviour.isSelected = true;
+            baseUnitBehaviour.ShowTarget();
+        }
     }
 
     public virtual void Unselected () {

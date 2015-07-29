@@ -56,18 +56,11 @@ namespace UnityEngine.UI.Extensions {
 		// Stores all of the selectable game objects
 		private GameObject[] selectables;
 		
-		// A secondary storage of objects that the user can manually set.
-		private MonoBehaviour[] selectableGroup;
-		
 		//Stores the selectable that was touched when the mouse button was pressed down
 		private GameObject clickedBeforeDrag;
 		
 		//Stores the selectable that was touched when the mouse button was released
 		private GameObject clickedAfterDrag;
-		
-		//Custom UnityEvent so we can add Listeners to this instance when Selections are changed.
-		public class SelectionEvent : UnityEvent<IBoxSelectable[]> {}
-		public SelectionEvent onSelectionChange = new SelectionEvent();
 		
 		//Ensures that the canvas that this component is attached to is set to the correct render mode. If not, it will not render the selection box properly.
 		void ValidateCanvas(){
@@ -92,26 +85,6 @@ namespace UnityEngine.UI.Extensions {
 	 * 2) The user can filter which objects should be selectable, for example units versus menu selections
 	 *
 	 */
-		void SetSelectableGroup(IEnumerable<MonoBehaviour> behaviourCollection) {
-			
-			// If null, the selectionbox reverts to it's default behaviour
-			if (behaviourCollection == null) {
-				selectableGroup = null;
-				
-				return;
-			}
-			
-			//Runs a double check to ensure each of the objects in the collection can be selectable, and doesn't include them if not.
-			var behaviourList = new List<MonoBehaviour>();
-			
-			foreach(var behaviour in behaviourCollection) {
-				if (behaviour as IBoxSelectable != null) {
-					behaviourList.Add (behaviour);
-				}
-			}
-			
-			selectableGroup = behaviourList.ToArray();
-		}
 		
 		void CreateBoxRect(){
 			var selectionBoxGO = new GameObject();
@@ -178,17 +151,6 @@ namespace UnityEngine.UI.Extensions {
 
             selectables = selectableList.ToArray();
 
-            //foreach ( UnitViewPresenter behaviour in behavioursToGetSelectionsFrom) {
-
-            //             //If the behaviour implements the selectable interface, we add it to the selectable list
-            //	GameObject selectable = behaviour.gameObject;
-            //	if (selectable != null) {
-            //		selectableList.Add (selectable); 
-            //	}
-
-            //}
-            //selectables = selectableList.ToArray();
-
             //For single-click actions, we need to get the selectable that was clicked when selection began (if any)
 
             clickedBeforeDrag = GetSelectableAtMousePosition();
@@ -214,7 +176,7 @@ namespace UnityEngine.UI.Extensions {
 			
 			//This gets a bit tricky, because we have to make considerations depending on the heirarchy of the selectable's gameObject
 			foreach (var selectable in selectables) {
-                if ( selectable.transform != null ) {
+                if ( selectable != null ) {
                     //First we check to see if the selectable has a rectTransform
                     var rectTransform = ( selectable.transform as RectTransform );
 
@@ -247,8 +209,6 @@ namespace UnityEngine.UI.Extensions {
 
 			return null;
 		}
-
-        public RectTransform point;
 
         private List<GameObject> selectedList = new List<GameObject>();
 
@@ -287,20 +247,13 @@ namespace UnityEngine.UI.Extensions {
             List<GameObject> tempSelecteble = new List<GameObject>();
             //Then we check our list of Selectables to see if they're being preselected or not.
             foreach ( var selectable in selectables ) {
-                Debug.Log( selectable.name );
-                Vector3 screenPoint = GetScreenPointOfSelectable( selectable );
+                if ( selectable != null ) {
+                    Vector3 screenPoint = GetScreenPointOfSelectable( selectable );
 
-                //If the box Rect contains the selectabels screen point and that point is inside a valid selection mask, it's being preselected, otherwise it is not.
-
-                //if ( selectable != null && selectable.GetComponent<UnitViewPresenter>().unityType == BaseUnit.UnitType.hero) {
-
-                    //Debug.Log( "difference: " + currentMousePosition + " origin" + origin );
-                    //Debug.Log( "startPoint: " + startPoint + " origin" + boxRect.sizeDelta.x );
-                    point.position = currentMousePosition;
-                    if (RectTransformUtility.RectangleContainsScreenPoint( boxRect, screenPoint, null ) && PointIsValidAgainstSelectionMask( screenPoint ) ) {
-                        tempSelecteble.Add(selectable);
+                    if ( RectTransformUtility.RectangleContainsScreenPoint( boxRect, screenPoint, null ) && PointIsValidAgainstSelectionMask( screenPoint ) ) {
+                        tempSelecteble.Add( selectable );
                     }
-                //}
+                }
                 
             }
             //Finally, since it's possible for our first clicked object to not be within the bounds of the selection box
@@ -320,7 +273,7 @@ namespace UnityEngine.UI.Extensions {
 			
 			//If we clicked a selectable without dragging, and that selectable was previously selected, we must be trying to deselect it.
 			if (clickedAfterDrag != null && clickedBeforeDrag && clickedBeforeDrag.transform == clickedAfterDrag.transform ) {
-                Debug.Log( "1111" );
+
                 GameObject[] tempArray = new GameObject[selectables.Length-1];
                 int j = 0;
                 for ( int i=0; i<selectables.Length; ++i ) {

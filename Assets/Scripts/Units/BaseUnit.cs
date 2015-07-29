@@ -132,7 +132,7 @@ public class BaseUnit : IUnit {
 
             if ( currentHp <= 0 ) {
                 currentHp = 0;
-                if ( influence.owner.unityType == UnitType.hero ) {
+                if ( influence.owner.unitType == UnitType.hero ) {
                     influence.owner.GetGold( gold );
                     ((HeroViewPresentor)influence.owner).GetXP( xp );
                 }

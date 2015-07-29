@@ -58,11 +58,13 @@ public class EntityController {
 
     public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction ) {
 
+        unitViewPresenter.faction = faction;
+
         unitViewPresenter.GetPlayer( player );
 
         BaseUnitController unitController;
 
-        if ( unitViewPresenter.unityType == BaseUnit.UnitType.hero ) {
+        if ( unitViewPresenter.unitType == BaseUnit.UnitType.hero ) {
             unitController = new HeroUnitController( SelectUnit, (HeroViewPresentor)unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
         } else {
             unitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
@@ -78,7 +80,9 @@ public class EntityController {
 
     public void SetTarget (UnitViewPresenter unit) {
         foreach ( var key in unitsControllersSelectedBlue ) {
-            key.SetPlayerTarget( unit );
+            if ( unit.faction != key.GetUnitViewPresenter().faction) {
+                key.SetPlayerTarget( unit );
+            }             
         }
     }
 
@@ -126,6 +130,10 @@ public class EntityController {
         if ( Faction.Blue == faction ) {
             //unitsControllersSelectedBlue.Clear();
             unitsControllersSelectedBlue.Add( selectedUnit );
+            if ( selectedUnit.GetUnitViewPresenter().unitType == BaseUnit.UnitType.hero ) {
+                player.ShowActionButtons( selectedUnit.GetUnitViewPresenter().unitType );
+            }
+            player.ShowUnitsIcon( selectedUnit.GetUnitViewPresenter().unitType);
             return true;
         } else {
             return false;

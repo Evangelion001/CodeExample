@@ -15,7 +15,7 @@ public class Spawn {
     private GameObject GetPrefabByType (BaseUnit.UnitType unitType) {
 
         foreach ( var key in prefabs ) {
-            if ( key.GetComponent<UnitViewPresenter>().unityType == unitType ) {
+            if ( key.GetComponent<UnitViewPresenter>().unitType == unitType ) {
                 return key.gameObject;
             }
         }

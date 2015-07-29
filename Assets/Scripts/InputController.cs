@@ -129,10 +129,6 @@ public class InputController :MonoBehaviour {
         player.HideBuildDescription();
   
         foreach ( var key in array ) {
-            player.ShowUnitsIcon( key.unityType );
-            if ( key.unityType == BaseUnit.UnitType.hero ) {
-                player.ShowActionButtons( key.unityType );
-            }
             key.Select();
         }
     }

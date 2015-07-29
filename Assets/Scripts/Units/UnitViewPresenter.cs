@@ -6,8 +6,9 @@ public class UnitViewPresenter : MonoBehaviour {
     public GameObject selectTarget;
     public NavMeshAgent navMeshAgent;
     public BaseUnitBehaviour baseUnitBehaviour;
-    public BaseUnit.UnitType unityType;
+    public BaseUnit.UnitType unitType;
     public Animation _animation;
+    public EntityController.Faction faction;
 
     private BaseUnitController.SelectUnit selectUnit;
     private BaseUnit.DamageDelegate damageDelegate;
@@ -38,6 +39,7 @@ public class UnitViewPresenter : MonoBehaviour {
     }
 
     public void HideTarget () {
+        Debug.Log( "11" );
         selectTarget.SetActive( false );
     }
 

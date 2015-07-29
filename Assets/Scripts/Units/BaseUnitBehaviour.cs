@@ -32,6 +32,7 @@ public class BaseUnitBehaviour {
 
     public void ShowTarget () {
         if ( targetViewPresenter != null && isSelected ) {
+            Debug.Log( "12" );
             targetViewPresenter.ShowTarget();
         }
     }
@@ -99,7 +100,9 @@ public class BaseUnitBehaviour {
     public void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
         playerTarget = unitViewPresenter;
         fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
-        HideTarget();
+        if ( playerTarget != targetViewPresenter ) {
+            HideTarget();
+        }    
     }
 
     private void UpdateFindTarget () {
