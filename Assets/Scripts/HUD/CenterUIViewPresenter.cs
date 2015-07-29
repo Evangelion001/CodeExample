@@ -11,7 +11,7 @@ public class CenterUIViewPresenter : MonoBehaviour {
 
     public Sprite iceBoltIcon;
     public Sprite meteorShawerIcon;
-    public Sprite upgradeAbilityIcon;
+    public Sprite upgradeIcon;
     public Sprite levelUpIcon;
 
     public Sprite heroIcon;

@@ -56,6 +56,12 @@ public class CenterUIView {
         uiViewPresenter.BaraksPanel.SetActive( false );
     }
 
+    public void AddBuildActionButtons () {
+        actionButtonArray[actionButtonCounter].SetActive( true );
+        actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.upgradeIcon;
+        ++actionButtonCounter;
+    }
+
     public void AddHeroActionButton () {
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.iceBoltIcon;
@@ -64,7 +70,7 @@ public class CenterUIView {
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.meteorShawerIcon;
         ++actionButtonCounter;
         actionButtonArray[actionButtonCounter].SetActive( true );
-        actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.upgradeAbilityIcon;
+        actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.levelUpIcon;
         ++actionButtonCounter;
     }
 

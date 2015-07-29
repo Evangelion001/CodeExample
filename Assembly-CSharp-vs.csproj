@@ -62,6 +62,7 @@
      <Compile Include="Assets\Lib\Stateless\TransitioningTriggerBehaviour.cs" />
      <Compile Include="Assets\Lib\Stateless\TriggerBehaviour.cs" />
      <Compile Include="Assets\Lib\Stateless\TriggerWithParameters.cs" />
+     <Compile Include="Assets\Scripts\BoxSelectror.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildController.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildModel.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildView.cs" />
@@ -97,6 +98,9 @@
      <Compile Include="Assets\Scripts\Units\Hero\HeroViewPresentor.cs" />
      <Compile Include="Assets\Scripts\Units\IUnit.cs" />
      <Compile Include="Assets\Scripts\Units\UnitViewPresenter.cs" />
+     <Compile Include="Assets\SelectionBox\Code\ExampleSelectable.cs" />
+     <Compile Include="Assets\SelectionBox\Code\UnityEngine.UI.Extensions NameSpace\IBoxSelectable.cs" />
+     <Compile Include="Assets\SelectionBox\Code\UnityEngine.UI.Extensions NameSpace\SelectionBox.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnly.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnlyAttribute.cs" />
      <None Include="Assets\Resources\SkeletonData\animations.txt" />

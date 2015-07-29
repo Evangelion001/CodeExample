@@ -38,7 +38,7 @@ public class BaseUnitController {
     }
 
     protected virtual void Selected () {
-        entityControllerSelect( this );
+        entityControllerSelect( this, unitModel.GetFaction() );
         unitView.ShowSelectedEffect();
         baseUnitBehaviour.isSelected = true;
         baseUnitBehaviour.ShowTarget();

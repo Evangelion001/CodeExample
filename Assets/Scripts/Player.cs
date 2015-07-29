@@ -11,8 +11,12 @@ public class Player {
         cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>() );
     }
 
-    public void  ShowBuildDescription ( int level, BaseUnit.UnitType unitType, int timeRecruitment, int updateCost ) {
+    public void ShowBuildDescription ( int level, BaseUnit.UnitType unitType, int timeRecruitment, int updateCost ) {
         cuiv.ShowBuildDescription( level, unitType, timeRecruitment, updateCost );
+    }
+
+    public void HideBuildDescription () {
+        cuiv.HideBuildDescription();
     }
 
     public void ShowUnitsIcon (BaseUnit.UnitType unitType) {
@@ -29,6 +33,10 @@ public class Player {
                 break;
         }
 
+    }
+
+    public void ShowBuildActionButtons () {
+        cuiv.AddBuildActionButtons();
     }
 
     public void ShowActionButtons ( BaseUnit.UnitType unitType ) {

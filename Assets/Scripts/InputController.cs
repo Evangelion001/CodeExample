@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
-public class InputController : MonoBehaviour {
+public class InputController :MonoBehaviour {
 
     public GameObject tagret;
 
@@ -10,13 +10,18 @@ public class InputController : MonoBehaviour {
 
     private GameStateController gameStateController;
 
-    public delegate void UpdateWaveTimer ( int value ); 
+    public delegate void UpdateWaveTimer ( int value );
 
     public Text timerValue;
 
     public Player player;
 
+    public BoxSelectror boxSelectror;
+
     private bool hadSelected = false;
+
+    private Vector3 startSelectPoint;
+    private Vector3 endSelectPoint;
 
     void Start () {
 
@@ -26,9 +31,11 @@ public class InputController : MonoBehaviour {
 
     }
 
-    private void _UpdateWaveTimer (int value) {
+    private void _UpdateWaveTimer ( int value ) {
         timerValue.text = value.ToString();
     }
+
+    public GameObject[] units;
 
     void Update () {
         if ( Input.GetMouseButtonDown( 0 ) ) {
@@ -37,6 +44,22 @@ public class InputController : MonoBehaviour {
         if ( Input.GetMouseButtonDown( 1 ) ) {
             SetTargetByClick();
         }
+        //if ( Input.GetMouseButtonUp( 0 ) ) {
+        //    Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
+        //    RaycastHit hit;
+        //    if ( Physics.Raycast( ray, out hit ) ) {
+        //        endSelectPoint = hit.point;
+
+        //        float x = Vector2.Distance( new Vector2( startSelectPoint.x, 0 ), new Vector2( endSelectPoint.x, 0 ) );
+        //        float z = Vector2.Distance( new Vector2( startSelectPoint.z, 0 ), new Vector2( endSelectPoint.z, 0 ) );
+        //        boxSelectror.transform.position = new Vector3(startSelectPoint.x + x,
+        //            0.5f, startSelectPoint.z + z);
+        //        boxSelectror.transform.localScale = new Vector3( x * 0.5f, 1, z * 0.5f);
+
+        //        units = boxSelectror.GetSelectedObjects();
+        //        boxSelectror.gameObject.SetActive( true );
+        //    }
+        //}
     }
 
     private void SelectClick () {
@@ -50,21 +73,25 @@ public class InputController : MonoBehaviour {
                     entityController.UnselectUints();
                     player.HideActionButtons();
                     player.HideUnitIcon();
+                    player.HideBuildDescription();
                     break;
-                case "Unit":
-                    entityController.UnselectUints();
-                    player.HideActionButtons();
-                    player.HideUnitIcon();
-                    //FIXME add input array targets;
-                    player.ShowUnitsIcon( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType);
-                    player.ShowActionButtons( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType );
-                    hit.transform.gameObject.GetComponent<UnitViewPresenter>().Select();
-                    break;
+                //case "Unit":
+                    //entityController.UnselectUints();
+                    //player.HideActionButtons();
+                    //player.HideUnitIcon();
+                    //player.HideBuildDescription();
+                    ////FIXME add input array targets;
+                    //player.ShowUnitsIcon( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType );
+                    //player.ShowActionButtons( hit.transform.gameObject.GetComponent<UnitViewPresenter>().unityType );
+                    //hit.transform.gameObject.GetComponent<UnitViewPresenter>().Select();
+                    //break;
                 case "Build":
                     player.HideActionButtons();
                     player.HideUnitIcon();
+                    player.HideBuildDescription();
+                    player.ShowBuildActionButtons();
                     BuildView temp = hit.transform.gameObject.GetComponent<BuildView>();
-                    player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].traingTime, int updateCost )
+                    player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].trainingTime, temp.baraksUnitConstructor[temp.buildLevel].upgradeCost );
                     break;
             }
 
@@ -94,4 +121,19 @@ public class InputController : MonoBehaviour {
         }
     }
 
+    public void GetSelectableUnits ( UnitViewPresenter[] array) {
+
+        entityController.UnselectUints();
+        player.HideActionButtons();
+        player.HideUnitIcon();
+        player.HideBuildDescription();
+  
+        foreach ( var key in array ) {
+            player.ShowUnitsIcon( key.unityType );
+            if ( key.unityType == BaseUnit.UnitType.hero ) {
+                player.ShowActionButtons( key.unityType );
+            }
+            key.Select();
+        }
+    }
 }

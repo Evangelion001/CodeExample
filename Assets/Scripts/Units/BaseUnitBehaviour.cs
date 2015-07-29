@@ -157,7 +157,9 @@ public class BaseUnitBehaviour {
 
     private void StartFollowTarget () {
         animationController.RunAnimation();
-        navMeshAgent.SetDestination( targetViewPresenter.transform.position );
+        if ( targetViewPresenter != null ) {
+            navMeshAgent.SetDestination( targetViewPresenter.transform.position );
+        }
     }
 
     private void StopMoving () {

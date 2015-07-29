@@ -30,7 +30,7 @@ public class BuildView :MonoBehaviour {
         [SerializeField]
         public int upgradeCost;
         [SerializeField]
-        public float trainingTime;
+        public int trainingTime;
         [SerializeField]
         public int hp;
         [SerializeField]

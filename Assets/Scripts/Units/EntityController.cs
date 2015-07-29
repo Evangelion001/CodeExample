@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class EntityController {
 
-    public delegate void Select ( BaseUnitController selectedUnit );
+    public delegate bool Select ( BaseUnitController selectedUnit, Faction faction );
 
     //FIXME move to entityController (model)
     public enum Faction {
@@ -122,9 +122,14 @@ public class EntityController {
         }
     }
 
-    private void SelectUnit (BaseUnitController selectedUnit) {
-        unitsControllersSelectedBlue.Clear();
-        unitsControllersSelectedBlue.Add(selectedUnit);
+    private bool SelectUnit (BaseUnitController selectedUnit, Faction faction) {
+        if ( Faction.Blue == faction ) {
+            //unitsControllersSelectedBlue.Clear();
+            unitsControllersSelectedBlue.Add( selectedUnit );
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
