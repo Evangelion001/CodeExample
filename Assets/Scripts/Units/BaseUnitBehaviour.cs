@@ -32,7 +32,6 @@ public class BaseUnitBehaviour {
 
     public void ShowTarget () {
         if ( targetViewPresenter != null && isSelected ) {
-            Debug.Log( "12" );
             targetViewPresenter.ShowTarget();
         }
     }
@@ -43,7 +42,7 @@ public class BaseUnitBehaviour {
         }
     }
 
-    private void InitStateMachine () {
+    protected void InitStateMachine () {
 
         fsm = new FiniteStateMachine();
 
@@ -85,19 +84,18 @@ public class BaseUnitBehaviour {
         fsm.CallEvent( FiniteStateMachine.Events.Start );
     }
 
-    public void SetTargetPosition (Vector3 targetPosition ) {
+    public virtual void SetTargetPosition (Vector3 targetPosition ) {
         this.targetPosition = targetPosition;
-        //fsm.Fire( Trigger.GoToPosition );
         fsm.CallEvent( FiniteStateMachine.Events.GoToPosition );
     }
 
-    private void StartMove () {
+    protected void StartMove () {
         animationController.RunAnimation();
         navMeshAgent.ResetPath();
         navMeshAgent.SetDestination( targetPosition );
     }
 
-    public void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
+    public virtual void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
         playerTarget = unitViewPresenter;
         fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
         if ( playerTarget != targetViewPresenter ) {
@@ -105,7 +103,7 @@ public class BaseUnitBehaviour {
         }    
     }
 
-    private void UpdateFindTarget () {
+    protected void UpdateFindTarget () {
 
         UnitViewPresenter tempTarget = GetTargetDelegate( myFaction, myViewPresenter );
 
@@ -125,11 +123,10 @@ public class BaseUnitBehaviour {
 
     }
 
-    private void UpdateFindGroundPosition () {
+    protected void UpdateFindGroundPosition () {
 
         if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= 0.1f ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
-            //fsm.Fire( Trigger.TargetApproached );
         }
 
     }

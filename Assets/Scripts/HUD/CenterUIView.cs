@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class CenterUIView {
 
     private CenterUIViewPresenter uiViewPresenter;
+    private UnitUIViewPresentor unitUIViewPresentor;
 
     public void UpdateGold (int gold) {
         uiViewPresenter.goldValue.text = gold.ToString();
@@ -15,9 +16,10 @@ public class CenterUIView {
     private GameObject[] actionButtonArray = new GameObject[6];
     private GameObject[] unitIconArray = new GameObject[14];
 
-    public CenterUIView ( CenterUIViewPresenter uiViewPresenter ) {
+    public CenterUIView ( CenterUIViewPresenter uiViewPresenter, UnitUIViewPresentor unitUIViewPresentor ) {
         this.uiViewPresenter = uiViewPresenter;
-
+        this.unitUIViewPresentor = unitUIViewPresentor;
+        HideUnitDescription();
         for ( int i = 0; i < unitIconArray.Length; ++i ) {
             unitIconArray[i] = GameObject.Instantiate( uiViewPresenter.unitIconPrefab );
             unitIconArray[i].name = "UnitIcon " + i;
@@ -33,7 +35,41 @@ public class CenterUIView {
         }
     }
 
-    public void ShowBuildDescription (int level, BaseUnit.UnitType unitType, int timeRecruitment, int updateCost ) {
+    public void ShowUnitDescription ( BaseUnit.UnitType unitType, float armor, int attack, float attackSpeed, float attackRange, float speed, int level ) {
+        unitUIViewPresentor.UnitPanel.SetActive( true );
+        unitUIViewPresentor.LevelPanel.SetActive( false );
+
+        unitUIViewPresentor.Type = unitType.ToString();
+        unitUIViewPresentor.Armor = armor;
+        unitUIViewPresentor.Attack = attack;
+        unitUIViewPresentor.AttackSpeed = attackSpeed;
+        unitUIViewPresentor.AttackRange = attackRange;
+        unitUIViewPresentor.Speed = speed;
+
+        if ( level > -1 ) {
+            unitUIViewPresentor.LevelPanel.SetActive( true );
+            unitUIViewPresentor.Level = level;
+        }
+
+        switch ( unitType ) {
+            case BaseUnit.UnitType.swordman:
+                unitUIViewPresentor.Icon = uiViewPresenter.swordIcon;
+                break;
+            case BaseUnit.UnitType.archer:
+                unitUIViewPresentor.Icon = uiViewPresenter.archerIcon;
+                break;
+            case BaseUnit.UnitType.hero:
+                unitUIViewPresentor.Icon = uiViewPresenter.heroIcon;
+                break;
+        }
+        
+    }
+
+    public void HideUnitDescription () {
+        unitUIViewPresentor.UnitPanel.SetActive( false );
+    }
+
+    public void ShowBuildDescription ( int level, BaseUnit.UnitType unitType, int timeRecruitment, int updateCost ) {
         uiViewPresenter.BaraksPanel.SetActive( true );
 
         uiViewPresenter.buildTitle.text = "Baraks level " + level;
@@ -49,7 +85,7 @@ public class CenterUIView {
                 uiViewPresenter.unitIcon.sprite = uiViewPresenter.archerIcon;
                 break;
         }
-        
+
     }
 
     public void HideBuildDescription () {

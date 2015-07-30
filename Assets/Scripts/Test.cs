@@ -3,48 +3,48 @@ using System.Collections;
 
 public class Test : MonoBehaviour {
 
-    public NavMeshAgent navMeshAgent;
+    //public NavMeshAgent navMeshAgent;
 
-    public GameObject tagret;
+    //public GameObject tagret;
 
-    private Vector3 cameraStartDistance;
+    //private Vector3 cameraStartDistance;
 
-    private CenterUIView cuiv;
+    //private CenterUIView cuiv;
 
-    void Start () {
-        cameraStartDistance =  new Vector3(0,10,-15);
-        cuiv = new CenterUIView( FindObjectOfType<CenterUIViewPresenter>() );
-    }
+    //void Start () {
+    //    cameraStartDistance =  new Vector3(0,10,-15);
+    //    cuiv = new CenterUIView( FindObjectOfType<CenterUIViewPresenter>() );
+    //}
 
-    void Update () {
-        if ( Input.GetMouseButtonDown( 0 ) ) {
-            MoveAtClickedPosition();
-        }
-    }
+    //void Update () {
+    //    if ( Input.GetMouseButtonDown( 0 ) ) {
+    //        MoveAtClickedPosition();
+    //    }
+    //}
 
-    void LateUpdate () {
-        Camera.main.transform.position = navMeshAgent.transform.position + cameraStartDistance;
-    }
+    //void LateUpdate () {
+    //    Camera.main.transform.position = navMeshAgent.transform.position + cameraStartDistance;
+    //}
 
-    private void MoveAtClickedPosition () {
-        Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
-        RaycastHit hit;
+    //private void MoveAtClickedPosition () {
+    //    Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
+    //    RaycastHit hit;
 
-        if ( Physics.Raycast( ray, out hit )) {
+    //    if ( Physics.Raycast( ray, out hit )) {
 
-            switch ( hit.transform.gameObject.tag ) {
-                case "Ground":
-                    navMeshAgent.SetDestination( hit.point );
-                    tagret.transform.position = hit.point;
-                    break;
-                case "Unit":
-                    Debug.Log( "Unit" );
-                    cuiv.AddHeroIcon();
-                    break;
-            }
+    //        switch ( hit.transform.gameObject.tag ) {
+    //            case "Ground":
+    //                navMeshAgent.SetDestination( hit.point );
+    //                tagret.transform.position = hit.point;
+    //                break;
+    //            case "Unit":
+    //                Debug.Log( "Unit" );
+    //                cuiv.AddHeroIcon();
+    //                break;
+    //        }
 
-        }
+    //    }
 
-    }
+    //}
 
 }

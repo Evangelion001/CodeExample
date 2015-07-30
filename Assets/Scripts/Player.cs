@@ -8,11 +8,19 @@ public class Player {
     private CenterUIView cuiv;
 
     public Player () {
-        cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>() );
+        cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>(), GameObject.FindObjectOfType<UnitUIViewPresentor>()  );
     }
 
     public void ShowBuildDescription ( int level, BaseUnit.UnitType unitType, int timeRecruitment, int updateCost ) {
         cuiv.ShowBuildDescription( level, unitType, timeRecruitment, updateCost );
+    }
+
+    public void ShowUnitDescription ( BaseUnit.UnitType unitType, float armor, int attack, float attackSpeed, float attackRange, float speed, int level ) {
+        cuiv.ShowUnitDescription( unitType, armor, attack, attackSpeed, attackRange, speed, level );
+    }
+
+    public void HideUnitDescription () {
+        cuiv.HideUnitDescription();
     }
 
     public void HideBuildDescription () {

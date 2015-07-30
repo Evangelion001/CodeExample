@@ -16,7 +16,7 @@ public class InputController :MonoBehaviour {
 
     public Player player;
 
-    public BoxSelectror boxSelectror;
+    public Cursor cursor;
 
     private bool hadSelected = false;
 
@@ -90,8 +90,10 @@ public class InputController :MonoBehaviour {
                     player.HideUnitIcon();
                     player.HideBuildDescription();
                     player.ShowBuildActionButtons();
+                    player.HideUnitDescription();
                     BuildView temp = hit.transform.gameObject.GetComponent<BuildView>();
                     player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].trainingTime, temp.baraksUnitConstructor[temp.buildLevel].upgradeCost );
+                    cursor.SetMoveCursor();
                     break;
             }
 
@@ -110,10 +112,12 @@ public class InputController :MonoBehaviour {
                 case "Ground":
                     tagret.transform.position = hit.point;
                     entityController.MoveToPosition( hit.point );
+                    cursor.SetMoveCursor();
                     break;
                 case "Unit":
                     if ( entityController.isSelected() ) {
                         entityController.SetTarget( hit.transform.gameObject.GetComponent<UnitViewPresenter>() );
+                        cursor.SetAttackCursor();
                     }
                     break;
             }
@@ -122,14 +126,16 @@ public class InputController :MonoBehaviour {
     }
 
     public void GetSelectableUnits ( UnitViewPresenter[] array) {
-
-        entityController.UnselectUints();
-        player.HideActionButtons();
-        player.HideUnitIcon();
-        player.HideBuildDescription();
-  
-        foreach ( var key in array ) {
-            key.Select();
-        }
+        if ( array.Length > 0 ) {
+            cursor.SetMoveCursor();
+            entityController.UnselectUints();
+            player.HideActionButtons();
+            player.HideUnitIcon();
+            player.HideBuildDescription();
+            player.HideUnitDescription();
+            foreach ( var key in array ) {
+                key.Select();
+            }
+        } 
     }
 }

@@ -128,12 +128,37 @@ public class EntityController {
 
     private bool SelectUnit (BaseUnitController selectedUnit, Faction faction) {
         if ( Faction.Blue == faction ) {
-            //unitsControllersSelectedBlue.Clear();
+
             unitsControllersSelectedBlue.Add( selectedUnit );
+
+            if ( unitsControllersSelectedBlue.Count == 1 ) {
+
+                int level = -1;
+
+                if ( selectedUnit.GetUnitViewPresenter().unitType == BaseUnit.UnitType.hero ) {
+                    level = ( (HeroUnitController)selectedUnit ).GetLevel();
+                }
+
+                player.ShowUnitDescription(
+                    selectedUnit.GetUnitViewPresenter().unitType,
+                    selectedUnit.GetCharacteristics().armor,
+                    (int)selectedUnit.GetCharacteristics().attack,
+                    selectedUnit.GetCharacteristics().attackSpeed,
+                    selectedUnit.GetCharacteristics().attackRange,
+                    selectedUnit.GetCharacteristics().speed,
+                    level );
+            } else {
+                player.HideUnitDescription();
+                if ( unitsControllersSelectedBlue.Count == 2 ) {
+                    player.ShowUnitsIcon( unitsControllersSelectedBlue[0].GetUnitViewPresenter().unitType );
+                }
+                player.ShowUnitsIcon( selectedUnit.GetUnitViewPresenter().unitType );
+            }
+
             if ( selectedUnit.GetUnitViewPresenter().unitType == BaseUnit.UnitType.hero ) {
                 player.ShowActionButtons( selectedUnit.GetUnitViewPresenter().unitType );
             }
-            player.ShowUnitsIcon( selectedUnit.GetUnitViewPresenter().unitType);
+
             return true;
         } else {
             return false;

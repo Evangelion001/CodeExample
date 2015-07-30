@@ -69,6 +69,7 @@
      <Compile Include="Assets\Scripts\CameraMotion.cs" />
      <Compile Include="Assets\Scripts\CoroutineManager.cs" />
      <Compile Include="Assets\Scripts\CreepAI.cs" />
+     <Compile Include="Assets\Scripts\Cursor.cs" />
      <Compile Include="Assets\Scripts\Effect.cs" />
      <Compile Include="Assets\Scripts\EffectsConstructor.cs" />
      <Compile Include="Assets\Scripts\FiniteStateMachine.cs" />
@@ -85,6 +86,7 @@
      <Compile Include="Assets\Scripts\Spell.cs" />
      <Compile Include="Assets\Scripts\Test.cs" />
      <Compile Include="Assets\Scripts\TimeEffect.cs" />
+     <Compile Include="Assets\Scripts\UnitUIViewPresentor.cs" />
      <Compile Include="Assets\Scripts\Units\AnimationController.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnit.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitBehaviour.cs" />

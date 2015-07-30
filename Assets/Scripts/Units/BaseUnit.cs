@@ -68,6 +68,10 @@ public class BaseUnit : IUnit {
     private int gold = 100;
     private int xp = 100;
 
+    public UnitCharacteristics GetCharacteristics () {
+        return currentCharacteristics;
+    }
+
     BaseUnitController.UpdateCharacteristics updateCharacteristicsDelegate;
 
     public EntityController.Faction GetFaction () {

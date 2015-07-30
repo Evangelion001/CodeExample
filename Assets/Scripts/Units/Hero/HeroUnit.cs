@@ -42,5 +42,9 @@ public class HeroUnit : BaseUnit {
 
     }
 
+    public int GetLevel () {
+        return currentLevel;
+    }
+
 
 }

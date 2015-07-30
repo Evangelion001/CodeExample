@@ -71,6 +71,10 @@ public class BaseUnitController {
 
     }
 
+    public virtual BaseUnit.UnitCharacteristics GetCharacteristics () {
+        return unitModel.GetCharacteristics();
+    }
+
     protected void UpdateDeath () {
         baseUnitBehaviour.CallDeathFSMEvent();
         GameObject.Destroy( unitView.GetUnitViewPresenter().gameObject );

@@ -44,4 +44,8 @@ public class HeroUnitController : BaseUnitController {
         ((HeroView)unitView ).ShowLevelUp();
     }
 
+    public int GetLevel () {
+        return ((HeroUnit)unitModel).GetLevel();
+    }
+
 }
