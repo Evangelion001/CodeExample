@@ -18,9 +18,11 @@ public class HeroUnit : BaseUnit {
         EntityController.Faction faction, 
         EffectsController effectsController, 
         BaseUnitController.UpdateCharacteristics updateCharacteristics, 
-        BaseUnitController.Death updateDeath, HeroUnitController.LevelUpEffectDelegate levelUpEffect ) : base( name, characteristics, faction, effectsController, updateCharacteristics, updateDeath ) {
-        this.levelUpEffect = levelUpEffect;
+        BaseUnitController.Death updateDeath, 
+        HeroUnitController.LevelUpEffectDelegate 
+        levelUpEffect, BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) : base( name, characteristics, faction, effectsController, updateCharacteristics, updateDeath, setUpdeteCharacteristicsDelegate ) {
 
+        this.levelUpEffect = levelUpEffect;
     }
 
     public void GetXp (int xp) {
@@ -37,7 +39,6 @@ public class HeroUnit : BaseUnit {
                 }
             }
         }
-        Debug.Log( "currentLevel: " + currentLevel );
         //FIXME UpdateController;
 
     }
@@ -45,6 +46,5 @@ public class HeroUnit : BaseUnit {
     public int GetLevel () {
         return currentLevel;
     }
-
 
 }

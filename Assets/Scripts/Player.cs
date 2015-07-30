@@ -7,6 +7,8 @@ public class Player {
 
     private CenterUIView cuiv;
 
+    private BuildView buildView;
+
     public Player () {
         cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>(), GameObject.FindObjectOfType<UnitUIViewPresentor>()  );
     }
@@ -43,8 +45,21 @@ public class Player {
 
     }
 
-    public void ShowBuildActionButtons () {
-        cuiv.AddBuildActionButtons();
+    public void ShowBuildActionButtons ( BuildView buildView ) {
+
+        this.buildView = buildView;
+
+        cuiv.AddBuildActionButtons( BuildUpgrade );
+    }
+
+    public void BuildUpgrade () {
+        if ( Gold >= buildView.GetUpgradeCost() ) {
+            Gold = -buildView.GetUpgradeCost();
+            buildView.UpgradeBuilding();
+            ShowBuildDescription( buildView.buildLevel, buildView.spawnUnitType, buildView.baraksUnitConstructor[buildView.buildLevel].trainingTime, buildView.GetUpgradeCost() );
+        } else {
+            Debug.Log( "Need more gold" );
+        }
     }
 
     public void ShowActionButtons ( BaseUnit.UnitType unitType ) {

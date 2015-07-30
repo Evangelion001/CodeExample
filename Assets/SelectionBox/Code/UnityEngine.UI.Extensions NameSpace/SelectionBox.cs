@@ -119,12 +119,16 @@ namespace UnityEngine.UI.Extensions {
 		
 		
 		void BeginSelection(){
-			// Click somewhere in the Game View.
-			if (!Input.GetMouseButtonDown(0))
+
+            // Click somewhere in the Game View.
+            if (!Input.GetMouseButtonDown(0))
 				return;
-			
-			//The boxRect will be inactive up until the point we start selecting
-			boxRect.gameObject.SetActive(true);
+            if ( EventSystems.EventSystem.current.IsPointerOverGameObject() ) {
+                Debug.Log( "On button" );
+                return;
+            }
+            //The boxRect will be inactive up until the point we start selecting
+            boxRect.gameObject.SetActive(true);
 			
 			// Get the initial click position of the mouse. 
 			origin = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
@@ -216,9 +220,9 @@ namespace UnityEngine.UI.Extensions {
 			//Return if we're not dragging or if the selection has been aborted (BoxRect disabled)
 			if (!Input.GetMouseButton(0) || !boxRect.gameObject.activeSelf)
 				return;
-			
-			// Store the current mouse position in screen space.
-			Vector2 currentMousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+
+            // Store the current mouse position in screen space.
+            Vector2 currentMousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
 			// How far have we moved the mouse?
 			Vector2 difference = currentMousePosition - origin;
@@ -366,8 +370,8 @@ namespace UnityEngine.UI.Extensions {
 			//Get out if we haven't finished selecting, or if the selection has been aborted (boxRect disabled)
 			if (!Input.GetMouseButtonUp(0) || !boxRect.gameObject.activeSelf)
 				return;
-			
-			clickedAfterDrag = GetSelectableAtMousePosition();
+
+            clickedAfterDrag = GetSelectableAtMousePosition();
 			
 			//ApplySingleClickDeselection();
 			//ApplyPreSelections();

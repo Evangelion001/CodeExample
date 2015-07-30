@@ -1,21 +1,29 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class HeroUnitController : BaseUnitController {
 
     public delegate void LevelUpEffectDelegate ();
 
-    public HeroUnitController ( EntityController.Select entityControllerSelect, 
-        HeroViewPresentor unitViewPresenter, 
-        BaseUnit.UnitCharacteristics unitCharacteristics, 
-        EntityController.GetTarget getTarget, 
+    private EntityController.HeroResurrect heroResurrect;
+
+    public HeroUnitController ( EntityController.Select entityControllerSelect,
+        HeroViewPresentor unitViewPresenter,
+        BaseUnit.UnitCharacteristics unitCharacteristics,
+        EntityController.GetTarget getTarget,
         EntityController.Faction faction,
-        DeathDestroy updateDeath, Player.GetGold GetGold = null ):base ( entityControllerSelect, unitViewPresenter, unitCharacteristics, getTarget, faction, updateDeath ) {
+        DeathDestroy updateDeath, 
+        EntityController.HeroResurrect heroResurrect, 
+        BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) :base ( entityControllerSelect, unitViewPresenter, unitCharacteristics, getTarget, faction, updateDeath, setUpdeteCharacteristicsDelegate ) {
 
         EffectsController effectsController = new EffectsController();
-
-        unitModel = new HeroUnit( "Unit", unitCharacteristics, SpellInit( effectsController ), faction, effectsController, _UpdateCharacteristics, UpdateDeath, LevelUpEffect );
+        this.heroResurrect = heroResurrect;
+        unitBehaviour.CallDeathFSMEvent();
+        unitBehaviour = new HeroBehaviour( getTarget, faction, unitViewPresenter, animationController );
+        unitModel = new HeroUnit( "Unit", unitCharacteristics, SpellInit( effectsController ), faction, effectsController, _UpdateCharacteristics, UpdateDeath, LevelUpEffect, setUpdeteCharacteristicsDelegate );
         unitView = new HeroView( unitViewPresenter, Selected, unitModel.GetDamage, ((HeroUnit)unitModel).GetXp );
+
     }
 
     private Spell[] SpellInit ( EffectsController effectsController ) {
@@ -46,6 +54,33 @@ public class HeroUnitController : BaseUnitController {
 
     public int GetLevel () {
         return ((HeroUnit)unitModel).GetLevel();
+    }
+
+    public override void UpdateDeath () {
+        unitBehaviour.CallDeathFSMEvent();
+        unitView.GetUnitViewPresenter().gameObject.SetActive( false );
+        updateDeath( this );
+        resurrectTimer = ( ((HeroUnit)unitModel ).GetLevel() +1) * 60;
+        resurrectCounter = 0;
+        SceneManager.Instance.CoroutineManager.InvokeRepeatingBool( UpdateResuract, 1);
+    }
+
+    private int resurrectTimer = 0;
+
+    private int resurrectCounter = 0;
+
+    public bool UpdateResuract () {
+
+        if ( resurrectCounter >= resurrectTimer ) {
+            heroResurrect(this);
+            unitView.GetUnitViewPresenter().gameObject.SetActive( true );
+            ((HeroBehaviour)unitBehaviour).Resurrect();
+            return false;
+        }
+
+        ++resurrectCounter;
+
+        return true;
     }
 
 }

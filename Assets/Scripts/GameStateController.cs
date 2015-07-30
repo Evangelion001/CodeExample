@@ -57,7 +57,7 @@ public class GameStateController {
     private void AddCreeps () {
         foreach ( var key in buildView ) {
             if ( key.spawnUnitType != BaseUnit.UnitType.hero && key.spawnUnitType != BaseUnit.UnitType.bigMob ) {
-                spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction );
+                spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction, key._SetUpdeteCharacteristicsDelegate );
             }
         }
     }
@@ -65,7 +65,7 @@ public class GameStateController {
     private void AddHero () {
         foreach ( var key in buildView ) {
             if ( key.spawnUnitType == BaseUnit.UnitType.hero ) {
-                spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction );
+                spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction, key._SetUpdeteCharacteristicsDelegate );
             }
         }
     }
@@ -73,7 +73,7 @@ public class GameStateController {
     private void AddBigMob () {
         foreach ( var key in buildView ) {
             if ( key.spawnUnitType == BaseUnit.UnitType.bigMob ) {
-                spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction );
+                spawn.CreateUnitByType( key.spawnUnitType, key.spawnPosition.transform.position, key.GetUnit(), key.faction, key._SetUpdeteCharacteristicsDelegate );
             }
         }
     }

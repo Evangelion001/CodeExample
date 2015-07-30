@@ -94,6 +94,7 @@
      <Compile Include="Assets\Scripts\Units\BaseUnitView.cs" />
      <Compile Include="Assets\Scripts\Units\EffectsController.cs" />
      <Compile Include="Assets\Scripts\Units\EntityController.cs" />
+     <Compile Include="Assets\Scripts\Units\Hero\HeroBehaviour.cs" />
      <Compile Include="Assets\Scripts\Units\Hero\HeroUnit.cs" />
      <Compile Include="Assets\Scripts\Units\Hero\HeroUnitController.cs" />
      <Compile Include="Assets\Scripts\Units\Hero\HeroView.cs" />

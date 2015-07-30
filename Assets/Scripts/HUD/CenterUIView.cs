@@ -92,9 +92,13 @@ public class CenterUIView {
         uiViewPresenter.BaraksPanel.SetActive( false );
     }
 
-    public void AddBuildActionButtons () {
+    public void AddBuildActionButtons ( BuildView.UpgradeBuildingDelegate upgradeBuildingDelegate ) {
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.RemoveAllListeners();
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.upgradeIcon;
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.AddListener( ()=> {
+            upgradeBuildingDelegate();
+        } );
         ++actionButtonCounter;
     }
 

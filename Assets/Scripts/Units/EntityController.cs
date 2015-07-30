@@ -12,6 +12,7 @@ public class EntityController {
     }
 
     public delegate UnitViewPresenter GetTarget ( Faction myFaction, UnitViewPresenter unit);
+    public delegate void HeroResurrect ( HeroUnitController unit );
 
     private UnitViewPresenter GetUnitTarget(Faction myFaction, UnitViewPresenter unit ) {
 
@@ -28,13 +29,13 @@ public class EntityController {
         }
 
         foreach ( var key in tempBaseUnitControllers ) {
-
-            float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
-            if ( resUnitViewPresenter == null || tempDistance < distance ) {
-                resUnitViewPresenter = key.GetUnitViewPresenter();
-                distance = tempDistance;
+            if ( !key.GetInvulnerability() ) {
+                float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
+                if ( resUnitViewPresenter == null || tempDistance < distance ) {
+                    resUnitViewPresenter = key.GetUnitViewPresenter();
+                    distance = tempDistance;
+                }
             }
-
         }
 
         return resUnitViewPresenter;
@@ -56,7 +57,11 @@ public class EntityController {
         this.player = player;
     }
 
-    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction ) {
+    private void _HeroResurrect (HeroUnitController heroUnitController ) {
+        unitsControllersBlue.Add( heroUnitController );
+    }
+
+    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction, BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
 
         unitViewPresenter.faction = faction;
 
@@ -65,9 +70,9 @@ public class EntityController {
         BaseUnitController unitController;
 
         if ( unitViewPresenter.unitType == BaseUnit.UnitType.hero ) {
-            unitController = new HeroUnitController( SelectUnit, (HeroViewPresentor)unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
+            unitController = new HeroUnitController( SelectUnit, (HeroViewPresentor)unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit, _HeroResurrect, setUpdeteCharacteristicsDelegate );
         } else {
-            unitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit );
+            unitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit, setUpdeteCharacteristicsDelegate );
         }
 
         if ( faction == Faction.Blue ) {

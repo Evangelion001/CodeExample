@@ -39,7 +39,6 @@ public class UnitViewPresenter : MonoBehaviour {
     }
 
     public void HideTarget () {
-        Debug.Log( "11" );
         selectTarget.SetActive( false );
     }
 

@@ -10,12 +10,12 @@ public class BaseUnitController {
 
     private EntityController.Select entityControllerSelect;
 
-    private DeathDestroy updateDeath;
+    protected DeathDestroy updateDeath;
 
     protected BaseUnitView unitView;
     protected BaseUnit unitModel;
-    private BaseUnitBehaviour baseUnitBehaviour;
-    private AnimationController animationController;
+    protected BaseUnitBehaviour unitBehaviour;
+    protected AnimationController animationController;
 
     public UnitViewPresenter GetUnitViewPresenter () {
         return unitView.GetUnitViewPresenter();
@@ -23,40 +23,49 @@ public class BaseUnitController {
 
     private NavMeshAgent tempNavMeshAgent;
 
-    public BaseUnitController (EntityController.Select entityControllerSelect, UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, EntityController.GetTarget getTarget, EntityController.Faction faction, DeathDestroy updateDeath ) {
+    public BaseUnitController (
+        EntityController.Select entityControllerSelect, 
+        UnitViewPresenter unitViewPresenter, 
+        BaseUnit.UnitCharacteristics unitCharacteristics, 
+        EntityController.GetTarget getTarget, 
+        EntityController.Faction faction, 
+        DeathDestroy updateDeath, 
+        BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
+
         this.updateDeath = updateDeath;
+
         animationController = new AnimationController( unitViewPresenter._animation );
-        //Get 1 from contructor
+
         EffectsController effectsController = new EffectsController();
 
         tempNavMeshAgent = unitViewPresenter.navMeshAgent;
 
         this.entityControllerSelect = entityControllerSelect;
-        baseUnitBehaviour = new BaseUnitBehaviour( getTarget, faction, unitViewPresenter, animationController );
-        unitModel = new BaseUnit( "Unit", unitCharacteristics, faction, effectsController, _UpdateCharacteristics, UpdateDeath );
+        unitBehaviour = new BaseUnitBehaviour( getTarget, faction, unitViewPresenter, animationController );
+        unitModel = new BaseUnit( "Unit", unitCharacteristics, faction, effectsController, _UpdateCharacteristics, UpdateDeath, setUpdeteCharacteristicsDelegate );
         unitView = new BaseUnitView( unitViewPresenter, Selected, unitModel.GetDamage );
     }
 
     protected virtual void Selected () {
         if ( entityControllerSelect( this, unitModel.GetFaction() ) ) {
             unitView.ShowSelectedEffect();
-            baseUnitBehaviour.isSelected = true;
-            baseUnitBehaviour.ShowTarget();
+            unitBehaviour.isSelected = true;
+            unitBehaviour.ShowTarget();
         }
     }
 
     public virtual void Unselected () {
         unitView.HideSelectedEffect();
-        baseUnitBehaviour.isSelected = false;
-        baseUnitBehaviour.HideTarget();
+        unitBehaviour.isSelected = false;
+        unitBehaviour.HideTarget();
     }
 
     public virtual void MoveToPosition (Vector3 postion) {
-        baseUnitBehaviour.SetTargetPosition( postion );
+        unitBehaviour.SetTargetPosition( postion );
     }
 
     public virtual void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
-        baseUnitBehaviour.SetPlayerTarget( unitViewPresenter );
+        unitBehaviour.SetPlayerTarget( unitViewPresenter );
     }
 
     public void GetDamage (Influence influence ) {
@@ -66,20 +75,23 @@ public class BaseUnitController {
     protected void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics, Influence influence ) {
 
         tempNavMeshAgent.speed = newCharacteristics.speed;
-        baseUnitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
-        baseUnitBehaviour.SetInfluence( influence );
-
+        unitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
+        unitBehaviour.SetInfluence( influence );
+        
     }
 
     public virtual BaseUnit.UnitCharacteristics GetCharacteristics () {
         return unitModel.GetCharacteristics();
     }
 
-    protected void UpdateDeath () {
-        baseUnitBehaviour.CallDeathFSMEvent();
+    public virtual void UpdateDeath () {
+        unitBehaviour.CallDeathFSMEvent();
         GameObject.Destroy( unitView.GetUnitViewPresenter().gameObject );
         updateDeath(this);
-        Debug.Log( "Daeth" );
+    }
+
+    public bool GetInvulnerability () {
+        return unitModel.Invulnerability;
     }
 
 }

@@ -13,6 +13,7 @@ public class BaseUnit : IUnit {
 
     public delegate void DamageDelegate ( Influence damage );
     public delegate Influence GetInfluenceDelegate ();
+    public delegate void UpdateBaseUnitCharacteristics ( UnitCharacteristics unitCharacteristics );
 
     [Serializable]
     public class UnitCharacteristics {
@@ -57,22 +58,33 @@ public class BaseUnit : IUnit {
     }
 
     private string name;
-    private int currentHp;
-    private EntityController.Faction faction;
-    private UnitCharacteristics baseCharacteristics = new UnitCharacteristics();
-    private UnitCharacteristics currentCharacteristics = new UnitCharacteristics();
-    private EffectsController effectsController;
-    private List<Effect> currentEffects = new List<Effect>();
-    private BaseUnitController.Death updateDeath;
+    protected int currentHp;
+    protected EntityController.Faction faction;
+    protected UnitCharacteristics baseCharacteristics = new UnitCharacteristics();
+    protected UnitCharacteristics currentCharacteristics = new UnitCharacteristics();
+    protected EffectsController effectsController;
+    protected List<Effect> currentEffects = new List<Effect>();
+    protected BaseUnitController.Death updateDeath;
+    protected bool invulnerability = false;
+
     //FIXME add to Characteristics
-    private int gold = 100;
-    private int xp = 100;
+    protected int gold = 100;
+    protected int xp = 100;
 
     public UnitCharacteristics GetCharacteristics () {
         return currentCharacteristics;
     }
 
     BaseUnitController.UpdateCharacteristics updateCharacteristicsDelegate;
+
+    public bool Invulnerability  {
+       get {
+            return invulnerability;
+        }
+        set {
+            invulnerability = value;
+        }
+    }
 
     public EntityController.Faction GetFaction () {
         return faction;
@@ -93,7 +105,7 @@ public class BaseUnit : IUnit {
         Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
     }
 
-    private void AddEffect ( TimeEffect timeEffect ) {
+    protected void AddEffect ( TimeEffect timeEffect ) {
 
         for ( int i = 0; i < currentEffects.Count; ++i ) {
             if ( currentEffects[i].id == timeEffect.id) {
@@ -140,6 +152,7 @@ public class BaseUnit : IUnit {
                     influence.owner.GetGold( gold );
                     ((HeroViewPresentor)influence.owner).GetXP( xp );
                 }
+                setUpdeteCharacteristicsDelegate( UpdateBaseCharacteristics, true );
                 updateDeath();
             }
             //-> targetController->View.Updatehp
@@ -168,8 +181,24 @@ public class BaseUnit : IUnit {
         updateCharacteristicsDelegate( currentCharacteristics, GetInfluence() );
     }
 
-    public BaseUnit ( string name, UnitCharacteristics characteristics, EntityController.Faction faction, EffectsController effectsController, BaseUnitController.UpdateCharacteristics updateCharacteristics, BaseUnitController.Death updateDeath ) {
-        this.updateCharacteristicsDelegate = updateCharacteristics;
+    protected void UpdateBaseCharacteristics ( UnitCharacteristics characteristics ) {
+        baseCharacteristics = characteristics;
+        UpdateAppliedEffects();
+    }
+
+    private BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate;
+
+    public BaseUnit ( 
+        string name, 
+        UnitCharacteristics characteristics, 
+        EntityController.Faction faction, 
+        EffectsController effectsController, 
+        BaseUnitController.UpdateCharacteristics updateCharacteristics, 
+        BaseUnitController.Death updateDeath,
+        BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
+        this.setUpdeteCharacteristicsDelegate = setUpdeteCharacteristicsDelegate;
+        setUpdeteCharacteristicsDelegate( UpdateBaseCharacteristics, false );
+        updateCharacteristicsDelegate = updateCharacteristics;
         this.updateDeath = updateDeath;
         this.name = name;
         baseCharacteristics = characteristics;

@@ -20,9 +20,6 @@ public class InputController :MonoBehaviour {
 
     private bool hadSelected = false;
 
-    private Vector3 startSelectPoint;
-    private Vector3 endSelectPoint;
-
     void Start () {
 
         player = new Player();
@@ -39,6 +36,10 @@ public class InputController :MonoBehaviour {
 
     void Update () {
         if ( Input.GetMouseButtonDown( 0 ) ) {
+            if ( UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ) {
+                Debug.Log( "On button" );
+                return;
+            }
             SelectClick();
         }
         if ( Input.GetMouseButtonDown( 1 ) ) {
@@ -89,10 +90,10 @@ public class InputController :MonoBehaviour {
                     player.HideActionButtons();
                     player.HideUnitIcon();
                     player.HideBuildDescription();
-                    player.ShowBuildActionButtons();
                     player.HideUnitDescription();
                     BuildView temp = hit.transform.gameObject.GetComponent<BuildView>();
-                    player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].trainingTime, temp.baraksUnitConstructor[temp.buildLevel].upgradeCost );
+                    player.ShowBuildActionButtons( temp );
+                    player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].trainingTime, temp.GetUpgradeCost() );
                     cursor.SetMoveCursor();
                     break;
             }

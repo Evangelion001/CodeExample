@@ -12,6 +12,20 @@ public class BuildView :MonoBehaviour {
 
     public GameObject spawnPosition;
 
+    private BaseUnit.UpdateBaseUnitCharacteristics updateBaseUnitCharacteristics;
+
+    public delegate void SetUpdeteCharacteristicsDelegate ( BaseUnit.UpdateBaseUnitCharacteristics updateBaseUnitCharacteristics, bool delete);
+
+    public delegate void UpgradeBuildingDelegate ();
+
+    public void _SetUpdeteCharacteristicsDelegate ( BaseUnit.UpdateBaseUnitCharacteristics updateBaseUnitCharacteristics, bool delete ) {
+        if ( delete ) {
+            this.updateBaseUnitCharacteristics -= updateBaseUnitCharacteristics;
+        } else {
+            this.updateBaseUnitCharacteristics += updateBaseUnitCharacteristics;
+        }
+    }
+
 #if UNITY_EDITOR
     [ReadOnly]
 #endif
@@ -51,9 +65,13 @@ public class BuildView :MonoBehaviour {
 
     }
 
-    public BaseUnit.UnitCharacteristics UpgradeBuilding () {
+    public void UpgradeBuilding () {
         ++buildLevel;
-        return GetUnit();
+        updateBaseUnitCharacteristics( GetUnit() );
+    }
+
+    public int GetUpgradeCost () {
+        return baraksUnitConstructor[buildLevel].upgradeCost;
     }
 
     public BaseUnit.UnitCharacteristics GetUnit () {

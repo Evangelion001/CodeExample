@@ -4,22 +4,20 @@ using System.Collections;
 
 public class BaseUnitBehaviour {
 
-    private NavMeshAgent navMeshAgent;
-    private UnitViewPresenter targetViewPresenter;
-    private UnitViewPresenter myViewPresenter;
-    private Vector3 targetPosition;
-    private EntityController.GetTarget GetTargetDelegate;
-    private EntityController.Faction myFaction;
-    private FiniteStateMachine fsm;
-    private AnimationController animationController;
-    private float attackSpeed = 0;
-    private float attackRange = 0;
-    private Influence influence;
-    private bool canAttack = true;
-    private UnitViewPresenter playerTarget = null; 
+    protected NavMeshAgent navMeshAgent;
+    protected UnitViewPresenter targetViewPresenter;
+    protected UnitViewPresenter myViewPresenter;
+    protected Vector3 targetPosition;
+    protected EntityController.GetTarget GetTargetDelegate;
+    protected EntityController.Faction myFaction;
+    protected FiniteStateMachine fsm;
+    protected AnimationController animationController;
+    protected float attackSpeed = 0;
+    protected float attackRange = 0;
+    protected Influence influence;
+    protected bool canAttack = true;
+    protected UnitViewPresenter playerTarget = null; 
     public bool isSelected = false;
-
-    //private StateMachine<State, Trigger> fsm = new StateMachine<State, Trigger>( State.Empty );
 
     public BaseUnitBehaviour ( EntityController.GetTarget getTarget, EntityController.Faction faction, UnitViewPresenter myViewPresenter, AnimationController animationController) {
         this.myViewPresenter = myViewPresenter;
@@ -42,7 +40,7 @@ public class BaseUnitBehaviour {
         }
     }
 
-    protected void InitStateMachine () {
+    public virtual void InitStateMachine () {
 
         fsm = new FiniteStateMachine();
 
@@ -67,6 +65,7 @@ public class BaseUnitBehaviour {
         fsm.AddStateUpdate( FiniteStateMachine.States.FollowTarget, UpdateFindTarget, 0.5f );
         fsm.AddStateUpdate( FiniteStateMachine.States.FollowTarget, UpdateFollowTarget, 0.1f );
         fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.GoToPosition, FiniteStateMachine.States.Path );
+        fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.TargetLost, FiniteStateMachine.States.Idle );
         fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Action );
         fsm.SetStatePermit( FiniteStateMachine.States.FollowTarget, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
         fsm.SetStateExit( FiniteStateMachine.States.FollowTarget, StopMoving );
@@ -89,7 +88,10 @@ public class BaseUnitBehaviour {
         fsm.CallEvent( FiniteStateMachine.Events.GoToPosition );
     }
 
-    protected void StartMove () {
+    public virtual void StartMove () {
+        HideTarget();
+        playerTarget = null;
+        targetViewPresenter = null;
         animationController.RunAnimation();
         navMeshAgent.ResetPath();
         navMeshAgent.SetDestination( targetPosition );
@@ -103,7 +105,7 @@ public class BaseUnitBehaviour {
         }    
     }
 
-    protected void UpdateFindTarget () {
+    public virtual void UpdateFindTarget () {
 
         UnitViewPresenter tempTarget = GetTargetDelegate( myFaction, myViewPresenter );
 
@@ -121,6 +123,10 @@ public class BaseUnitBehaviour {
             }
         }
 
+        if ( targetViewPresenter == null ) {
+            fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
+        }
+
     }
 
     protected void UpdateFindGroundPosition () {
@@ -131,12 +137,7 @@ public class BaseUnitBehaviour {
 
     }
 
-    private void UpdateFollowPath () {
-
-    }
-
-    private void UpdateFollowTarget () {
-
+    protected void UpdateFollowTarget () {
         if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
             //fsm.Fire( Trigger.TargetApproached );
@@ -149,25 +150,25 @@ public class BaseUnitBehaviour {
         }
     }
 
-    private void StartIdle () {
+    protected void StartIdle () {
         animationController.IdleAnimation();
         targetViewPresenter = null;
         navMeshAgent.ResetPath();
     }
 
-    private void StartFollowTarget () {
+    protected void StartFollowTarget () {
         animationController.RunAnimation();
         if ( targetViewPresenter != null ) {
             navMeshAgent.SetDestination( targetViewPresenter.transform.position );
         }
     }
 
-    private void StopMoving () {
+    protected void StopMoving () {
         animationController.IdleAnimation();
         navMeshAgent.ResetPath();
     }
 
-    private void UpdateAttack () {
+    protected void UpdateAttack () {
         //Debug.Log( "UpdateAttack " + myViewPresenter.name );
         if ( targetViewPresenter == null || Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
@@ -187,38 +188,36 @@ public class BaseUnitBehaviour {
 
     }
 
-    private void EndOfDelayAttack () {
+    protected void EndOfDelayAttack () {
         canAttack = true;
     }
 
-    public void SetAttackParam (float attackSpeed, float attackRange) {
+    public virtual void SetAttackParam (float attackSpeed, float attackRange) {
         this.attackSpeed = attackSpeed;
         this.attackRange = attackRange;
     }
 
-    public void SetInfluence (Influence influence ) {
+    public virtual void SetInfluence (Influence influence ) {
         this.influence = influence;
     }
 
-    public void CallDeathFSMEvent () {
+    public virtual void CallDeathFSMEvent () {
         fsm.CallEvent( FiniteStateMachine.Events.Dead );
     }
 
-    private void StartAttack () {
+    protected void StartAttack () {
         if ( targetViewPresenter != null ) {
             myViewPresenter.transform.LookAt( targetViewPresenter.transform.position );
         }
     }
 
-    private void StopAttack () {
-        Debug.Log( "StopAttack" );
+    protected void StopAttack () {
         animationController.IdleAnimation();
         targetViewPresenter = null;
         navMeshAgent.ResetPath();
     }
 
-    private void OnDeadEnter () {
-        Debug.Log( "OnDeadEnter " + myViewPresenter.transform.name );
+    public virtual void OnDeadEnter () {
+        //Debug.Log( "OnDeadEnter " + myViewPresenter.transform.name );
     }
-
 }

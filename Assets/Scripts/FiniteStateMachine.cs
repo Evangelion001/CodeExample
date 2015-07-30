@@ -10,7 +10,9 @@ public class FiniteStateMachine {
         FollowTarget,
         Action,
         Path,
-        Dead
+        Dead,
+        FollowSpellTarget,
+        UseSpell
     };
 
     public States CurrentState {
@@ -25,7 +27,9 @@ public class FiniteStateMachine {
         TargetApproached,
         TargetLost,
         GoToPosition,
-        Dead
+        Dead,
+        ActivateSpell,
+        Cancel
     };
 
     public struct StateActionsUpdates {
