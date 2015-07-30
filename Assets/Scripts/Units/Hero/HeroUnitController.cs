@@ -17,6 +17,7 @@ public class HeroUnitController : BaseUnitController {
         EntityController.HeroResurrect heroResurrect, 
         BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) :base ( entityControllerSelect, unitViewPresenter, unitCharacteristics, getTarget, faction, updateDeath, setUpdeteCharacteristicsDelegate ) {
 
+        this.updateDeath = updateDeath;
         EffectsController effectsController = new EffectsController();
         this.heroResurrect = heroResurrect;
         unitBehaviour.CallDeathFSMEvent();
@@ -58,8 +59,9 @@ public class HeroUnitController : BaseUnitController {
 
     public override void UpdateDeath () {
         unitBehaviour.CallDeathFSMEvent();
-        unitView.GetUnitViewPresenter().gameObject.SetActive( false );
+        Debug.Log( "UpdateDeath" );
         updateDeath( this );
+        unitView.GetUnitViewPresenter().gameObject.SetActive( false );
         resurrectTimer = ( ((HeroUnit)unitModel ).GetLevel() +1) * 60;
         resurrectCounter = 0;
         SceneManager.Instance.CoroutineManager.InvokeRepeatingBool( UpdateResuract, 1);
@@ -72,6 +74,7 @@ public class HeroUnitController : BaseUnitController {
     public bool UpdateResuract () {
 
         if ( resurrectCounter >= resurrectTimer ) {
+            Debug.Log( "UpdateResuract" );
             heroResurrect(this);
             unitView.GetUnitViewPresenter().gameObject.SetActive( true );
             ((HeroBehaviour)unitBehaviour).Resurrect();

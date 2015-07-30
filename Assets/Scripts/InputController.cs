@@ -37,7 +37,6 @@ public class InputController :MonoBehaviour {
     void Update () {
         if ( Input.GetMouseButtonDown( 0 ) ) {
             if ( UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ) {
-                Debug.Log( "On button" );
                 return;
             }
             SelectClick();
@@ -75,6 +74,7 @@ public class InputController :MonoBehaviour {
                     player.HideActionButtons();
                     player.HideUnitIcon();
                     player.HideBuildDescription();
+                    player.HideUnitDescription();
                     break;
                 //case "Unit":
                     //entityController.UnselectUints();

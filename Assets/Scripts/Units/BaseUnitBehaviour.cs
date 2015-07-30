@@ -170,7 +170,7 @@ public class BaseUnitBehaviour {
 
     protected void UpdateAttack () {
         //Debug.Log( "UpdateAttack " + myViewPresenter.name );
-        if ( targetViewPresenter == null || Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > attackRange ) {
+        if ( targetViewPresenter == null || Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > attackRange || !targetViewPresenter.isActiveAndEnabled ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             //fsm.Fire( Trigger.TargetLost );
             return;
