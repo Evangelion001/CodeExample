@@ -74,9 +74,11 @@ public class BaseUnitController {
 
     protected void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics, Influence influence ) {
 
-        tempNavMeshAgent.speed = newCharacteristics.speed;
-        unitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
-        unitBehaviour.SetInfluence( influence );
+        if ( tempNavMeshAgent != null ) {
+            tempNavMeshAgent.speed = newCharacteristics.speed;
+            unitBehaviour.SetAttackParam( newCharacteristics.attackSpeed, newCharacteristics.attackRange );
+            unitBehaviour.SetInfluence( influence );
+        }
         
     }
 

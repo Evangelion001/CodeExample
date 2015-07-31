@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class Player {
@@ -9,8 +10,12 @@ public class Player {
 
     private BuildView buildView;
 
-    public Player () {
-        cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>(), GameObject.FindObjectOfType<UnitUIViewPresentor>()  );
+    public Player ( 
+        Action<Action<UnitViewPresenter>> currentTargetSpell, 
+        Action<Action<Vector3>> currentPositionSpell,
+        Action<InputController.CursorsType> cursorAction ) {
+
+        cuiv = new CenterUIView( GameObject.FindObjectOfType<CenterUIViewPresenter>(), GameObject.FindObjectOfType<UnitUIViewPresentor>(), currentTargetSpell,  currentPositionSpell,  cursorAction );
     }
 
     public void ShowBuildDescription ( int level, BaseUnit.UnitType unitType, int timeRecruitment, int updateCost ) {
@@ -62,11 +67,11 @@ public class Player {
         }
     }
 
-    public void ShowActionButtons ( BaseUnit.UnitType unitType ) {
+    public void ShowActionButtons ( BaseUnit.UnitType unitType, HeroUnit.ActionSpell actionSpell ) {
 
         switch ( unitType ) {
             case BaseUnit.UnitType.hero:
-                cuiv.AddHeroActionButton();
+                cuiv.AddHeroActionButton( actionSpell );
                 break;
             default:
                 cuiv.HideActionButton();

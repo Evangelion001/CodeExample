@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public class HeroUnit : BaseUnit {
 
@@ -22,7 +23,23 @@ public class HeroUnit : BaseUnit {
         HeroUnitController.LevelUpEffectDelegate 
         levelUpEffect, BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) : base( name, characteristics, faction, effectsController, updateCharacteristics, updateDeath, setUpdeteCharacteristicsDelegate ) {
 
+        this.spells = spells;
         this.levelUpEffect = levelUpEffect;
+    }
+
+    public struct ActionSpell {
+        public Action<Spell, UnitViewPresenter> targetSpell;
+        public Action<Spell, Vector3> positionSpell;
+        public Spell[] spells;
+    }
+
+    public ActionSpell GetActionSpells () {
+        ActionSpell resArray = new ActionSpell();
+
+        resArray.spells = spells;
+
+        return resArray;
+
     }
 
     public void GetXp (int xp) {

@@ -31,20 +31,29 @@ public class HeroUnitController : BaseUnitController {
 
         GameObject freezeEffect = (GameObject)Resources.Load( "Prefabs/Particles/Freeze" );
 
-        Spell[] spells = new Spell[1];
+        Spell[] spells = new Spell[2];
         spells[0] = new Spell();
 
-        Effect effect = new Effect( effectsController );
-        effect.characteristicsModifiers.attackSpeed = 0.5f;
-        effect.characteristicsModifiers.speed = 0.5f;
+        TimeEffect effect = new TimeEffect( effectsController );
+        effect.characteristicsModifiers.attackSpeed = 0.1f;
+        effect.characteristicsModifiers.speed = 0.1f;
         effect.visualPrefab = freezeEffect;
+        effect.duration = 10;
 
         spells[0].aoeRadius = 0;
-        spells[0].attackRange = 1;
+        spells[0].attackRange = 10;
         spells[0].damage = 15;
         spells[0].healing = 0;
-        spells[0].needTarget = false;
+        spells[0].needTarget = true;
         spells[0].effect = effect;
+
+        spells[1] = new Spell();
+        spells[1].aoeRadius = 0;
+        spells[1].attackRange = 10;
+        spells[1].damage = 15;
+        spells[1].healing = 0;
+        spells[1].needTarget = false;
+        spells[1].effect = effect;
 
         return spells;
     }
@@ -70,6 +79,20 @@ public class HeroUnitController : BaseUnitController {
     private int resurrectTimer = 0;
 
     private int resurrectCounter = 0;
+
+    public void GetSpells () {
+
+    }
+
+    public HeroUnit.ActionSpell AbilityDelegate () {
+
+        HeroUnit.ActionSpell resActionSpell = ( (HeroUnit)unitModel ).GetActionSpells();
+
+        resActionSpell.positionSpell = ( (HeroBehaviour)unitBehaviour ).PlayerUseAbility;
+        resActionSpell.targetSpell = ( (HeroBehaviour)unitBehaviour ).PlayerUseAbility;
+
+        return resActionSpell;
+    }
 
     public bool UpdateResuract () {
 

@@ -9,15 +9,13 @@ public class HeroBehaviour : BaseUnitBehaviour {
         InitStateMachine();
     }
 
-    private float spellRange = 6;
-
     private Vector3 spellTargetPosition;
 
-    private UnitUIViewPresentor spellTarget;
+    private UnitViewPresenter spellTarget;
 
     private bool spellWithTarget = false;
 
-    //FIXME Add sepll field
+    private Spell spell;
 
     public override void InitStateMachine () {
         fsm = new FiniteStateMachine();
@@ -111,12 +109,12 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
     private void UpdateFollowSpellTarget () {
 
-        if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= spellRange ) {
+        if ( Vector3.Distance( navMeshAgent.pathEndPosition, myViewPresenter.transform.position ) <= spell.attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
             return;
         }
 
-        if ( spellWithTarget && spellTarget != null && navMeshAgent.pathEndPosition != targetViewPresenter.transform.position ) {
+        if ( spellWithTarget && spellTarget != null && navMeshAgent.pathEndPosition != spellTarget.transform.position ) {
             navMeshAgent.ResetPath();
             navMeshAgent.SetDestination( spellTarget.transform.position );
         }
@@ -125,7 +123,7 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
     private void ActivateSpell () {
 
-        if ( spellWithTarget && spellTarget == null || Vector3.Distance( targetViewPresenter.transform.position, myViewPresenter.transform.position ) > spellRange ) {
+        if ( spellWithTarget && spellTarget == null || Vector3.Distance( spellTarget.transform.position, myViewPresenter.transform.position ) > spell.attackRange ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             return;
         }
@@ -139,8 +137,15 @@ public class HeroBehaviour : BaseUnitBehaviour {
         myViewPresenter.transform.LookAt( tempPos );
 
         animationController.AttackAnimation();
-        influence.owner = myViewPresenter;
-        targetViewPresenter.GetDamage( influence );
+
+        Influence temp = new Influence();
+        temp.damage = 0;
+        temp.healing = 0;
+        temp.owner = myViewPresenter;
+
+        temp.timeEffect = spell.effect;
+
+        spellTarget.GetDamage( temp );
 
         fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
     }
@@ -152,17 +157,17 @@ public class HeroBehaviour : BaseUnitBehaviour {
         navMeshAgent.ResetPath();
     }
 
-    public void PlayerUseAbility ( float spellRange, Vector3 spellTargetPosition  ) {
+    public void PlayerUseAbility ( Spell spell, Vector3 spellTargetPosition  ) {
         spellWithTarget = false;
         this.spellTargetPosition = spellTargetPosition;
-        this.spellRange = spellRange;
+        this.spell = spell;
         fsm.CallEvent( FiniteStateMachine.Events.ActivateSpell );
     }
 
-    public void PlayerUseAbility ( float spellRange, UnitUIViewPresentor spellTarget ) {
+    public void PlayerUseAbility ( Spell spell, UnitViewPresenter spellTarget ) {
         spellWithTarget = true;
         this.spellTarget = spellTarget;
-        this.spellRange = spellRange;
+        this.spell = spell;
         fsm.CallEvent( FiniteStateMachine.Events.ActivateSpell );
     }
 

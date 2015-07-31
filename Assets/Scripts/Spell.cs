@@ -14,7 +14,7 @@ public class Spell {
     [SerializeField]
     public bool needTarget = false;
     [SerializeField]
-    public Effect effect = null;
+    public TimeEffect effect = null;
     [SerializeField]
     public GameObject visualPrefab = null;
 }

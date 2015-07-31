@@ -161,7 +161,8 @@ public class EntityController {
             }
 
             if ( selectedUnit.GetUnitViewPresenter().unitType == BaseUnit.UnitType.hero ) {
-                player.ShowActionButtons( selectedUnit.GetUnitViewPresenter().unitType );
+                Debug.Log( "((HeroUnitController)selectedUnit).AbilityDelegate(): " + ( (HeroUnitController)selectedUnit ).AbilityDelegate().spells.Length );
+                player.ShowActionButtons( selectedUnit.GetUnitViewPresenter().unitType, ((HeroUnitController)selectedUnit).AbilityDelegate() );
             }
 
             return true;

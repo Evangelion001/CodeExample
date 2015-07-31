@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class CenterUIView {
@@ -15,11 +16,16 @@ public class CenterUIView {
 
     private GameObject[] actionButtonArray = new GameObject[6];
     private GameObject[] unitIconArray = new GameObject[14];
-
-    public CenterUIView ( CenterUIViewPresenter uiViewPresenter, UnitUIViewPresentor unitUIViewPresentor ) {
+    private Action<InputController.CursorsType> cursorAction;
+    public CenterUIView ( CenterUIViewPresenter uiViewPresenter, UnitUIViewPresentor unitUIViewPresentor, Action<Action<UnitViewPresenter>> currentTargetSpell, 
+        Action<Action<Vector3>> currentPositionSpell, Action<InputController.CursorsType> cursorAction ) {
+        this.cursorAction = cursorAction;
+        this.currentTargetSpell = currentTargetSpell;
+        this.currentPositionSpell = currentPositionSpell;
         this.uiViewPresenter = uiViewPresenter;
         this.unitUIViewPresentor = unitUIViewPresentor;
         HideUnitDescription();
+
         for ( int i = 0; i < unitIconArray.Length; ++i ) {
             unitIconArray[i] = GameObject.Instantiate( uiViewPresenter.unitIconPrefab );
             unitIconArray[i].name = "UnitIcon " + i;
@@ -96,18 +102,62 @@ public class CenterUIView {
         actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.RemoveAllListeners();
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.upgradeIcon;
-        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.AddListener( ()=> {
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.AddListener( () => {
             upgradeBuildingDelegate();
         } );
         ++actionButtonCounter;
     }
 
-    public void AddHeroActionButton () {
-        actionButtonArray[actionButtonCounter].SetActive( true );
-        actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.iceBoltIcon;
+    private  Action<Action<UnitViewPresenter>> currentTargetSpell;
+    private  Action<Action<Vector3>> currentPositionSpell;
+
+    public void AddHeroActionButton ( HeroUnit.ActionSpell actionSpell ) {
+        Debug.Log( "init: " + actionSpell.spells[0].attackRange);
+        //FIXME add buttons for each spells
+        actionButtonCounter = 0;
+        actionButtonArray[0].SetActive( true );
+        actionButtonArray[0].GetComponent<Image>().sprite = uiViewPresenter.iceBoltIcon;
+        actionButtonArray[0].GetComponent<Button>().onClick.RemoveAllListeners();
+        actionButtonArray[0].GetComponent<Button>().onClick.AddListener( () => {
+            int idx = 0;
+            if ( actionSpell.spells[0].needTarget ) {
+                Debug.Log( "Ok3" );
+                cursorAction( InputController.CursorsType.TargetSpell );
+                //currentTargetSpell -= currentTargetSpell;
+                Action<UnitViewPresenter> currentTargetSpell = x => {
+                    actionSpell.targetSpell( actionSpell.spells[idx], x );
+                };
+
+                this.currentTargetSpell( currentTargetSpell );
+            } else {
+                cursorAction( InputController.CursorsType.PositionSpell );
+                //currentPositionSpell -= currentPositionSpell;
+                Action<Vector3> currentPositionSpell = x => {
+                    actionSpell.positionSpell( actionSpell.spells[idx], x );
+                };
+            }
+        }); 
+
         ++actionButtonCounter;
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.meteorShawerIcon;
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.RemoveAllListeners();
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.AddListener( () => {
+            int idx = 1;
+            //if ( actionSpell.spells[idx].needTarget ) {
+            //    cursorAction( InputController.CursorsType.TargetSpell );
+            //    currentTargetSpell -= currentTargetSpell;
+            //    currentTargetSpell += x => {
+            //        actionSpell.targetSpell( actionSpell.spells[idx], x );
+            //    };
+            //} else {
+            //    cursorAction( InputController.CursorsType.PositionSpell );
+            //    currentPositionSpell -= currentPositionSpell;
+            //    currentPositionSpell += x => {
+            //        actionSpell.positionSpell( actionSpell.spells[idx], x );
+            //    };
+            //}
+        } );
         ++actionButtonCounter;
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.levelUpIcon;
