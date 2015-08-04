@@ -78,7 +78,7 @@ public class InputController :MonoBehaviour {
         GetSelectableUnits(selelectionBox.SelectionBoxArea());
 
         if ( Input.GetMouseButtonDown( 0 ) ) {
-            if ( UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ) {
+            if ( !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() ) {
                 return;
             }
             SelectClick();

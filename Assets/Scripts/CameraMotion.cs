@@ -76,18 +76,31 @@ public class CameraMotion : MonoBehaviour {
 
     }
 
-    public void SetTarget () {
-        currentCameraHight = 7;
+    private bool freeView = true;
+
+    public void ChangeView () {
+        if ( freeView ) {
+            SetTarget();
+            freeView = false;
+        } else {
+            FreeView();
+            freeView = true;
+        }
     }
 
-    public void FreeView () {
+    private void SetTarget () {
+        currentCameraHight = 7;
+        target = FindObjectOfType<HeroViewPresentor>().gameObject;
+    }
+
+    private void FreeView () {
         currentCameraHight = cameraHeight;
         target = null;
     }
 
     private void MoveToTarget () {
         Vector3 destination = new Vector3( target.transform.position.x,transform.position.y, target.transform.position.z -10 );
-        transform.position = Vector3.Slerp( transform.position, destination, cameraSpeed * Time.deltaTime );
+        tempCameraPosition = Vector3.Slerp( transform.position, destination, cameraSpeed * Time.deltaTime );
     }
 
 }

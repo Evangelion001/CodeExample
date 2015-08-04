@@ -11,6 +11,10 @@ public class CenterUIView {
         uiViewPresenter.goldValue.text = gold.ToString();
     }
 
+    public void UpdateResurrectTimer( int timer ) {
+        uiViewPresenter.resurrectValue.text = timer.ToString();
+    }
+
     private int selectUnitCounter = 0;
     private int actionButtonCounter = 0;
 
@@ -113,7 +117,6 @@ public class CenterUIView {
 
     public void AddHeroActionButton ( HeroUnit.ActionSpell actionSpell ) {
 
-        Debug.Log( "init: " + actionSpell.spells[0].attackRange);
         //FIXME add buttons for each spells
         actionButtonCounter = 0;
         actionButtonArray[actionButtonCounter].SetActive( true );
@@ -141,7 +144,6 @@ public class CenterUIView {
         }); 
 
         ++actionButtonCounter;
-        Debug.Log( "init: " + actionSpell.spells[1].effect.name );
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.meteorShawerIcon;
         if ( !actionSpell.spells[1].cd )

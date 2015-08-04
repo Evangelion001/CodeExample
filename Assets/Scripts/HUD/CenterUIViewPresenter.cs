@@ -28,5 +28,6 @@ public class CenterUIViewPresenter : MonoBehaviour {
     public Text updateCost;
     public Image unitIcon;
     public Image readyIndicator;
+    public Text resurrectValue;
 
 }

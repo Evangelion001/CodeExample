@@ -80,7 +80,6 @@ public class HeroUnitController : BaseUnitController {
 
     public override void UpdateDeath () {
         unitBehaviour.CallDeathFSMEvent();
-        Debug.Log( "UpdateDeath" );
         updateDeath( this );
         unitView.GetUnitViewPresenter().gameObject.SetActive( false );
         resurrectTimer = ( ((HeroUnit)unitModel ).GetLevel() +1) * 60;
@@ -109,7 +108,6 @@ public class HeroUnitController : BaseUnitController {
     public bool UpdateResuract () {
 
         if ( resurrectCounter >= resurrectTimer ) {
-            Debug.Log( "UpdateResuract" );
             heroResurrect(this);
             unitView.GetUnitViewPresenter().gameObject.SetActive( true );
             ((HeroBehaviour)unitBehaviour).Resurrect();

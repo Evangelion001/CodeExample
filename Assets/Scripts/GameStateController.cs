@@ -3,10 +3,10 @@ using System.Collections;
 
 public class GameStateController {
 
-    private int startTimeout = 5;
+    private int startTimeout = 30;
     private int nextWaveTimeout = 10;
     private int currentWaveTimer = 0;
-    private int waveCounter = 1;
+    private int waveCounter = 5;
     private Spawn spawn;
     private EntityController entityController;
     private BaraksModel[] baraksModels;
@@ -18,6 +18,7 @@ public class GameStateController {
         this.entityController = entityController;
         spawn = new Spawn( entityController );
         baraksModels = GameObject.FindObjectsOfType<BaraksModel>();
+        AddHero();
     }
 
     private bool WaveCounter () {
@@ -41,10 +42,6 @@ public class GameStateController {
 
         if ( waveCounter > 0 ) {
             StartWaveTimer( nextWaveTimeout );
-        }
-
-        if ( waveCounter == 0 ) {
-            AddHero();
         }
 
         if ( waveCounter == 0) {

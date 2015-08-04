@@ -67,7 +67,9 @@ public class BaraksModel :MonoBehaviour {
 
     public void UpgradeBuilding () {
         ++buildLevel;
-        updateBaseUnitCharacteristics( GetUnit() );
+        if ( updateBaseUnitCharacteristics != null ) {
+            updateBaseUnitCharacteristics( GetUnit() );
+        }
     }
 
     public int GetUpgradeCost () {

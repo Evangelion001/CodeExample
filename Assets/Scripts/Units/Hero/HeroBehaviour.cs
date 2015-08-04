@@ -70,7 +70,7 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
         fsm.SetStateEntery( FiniteStateMachine.States.UseSpell, ActivateSpell );
         fsm.SetStatePermit( FiniteStateMachine.States.UseSpell, FiniteStateMachine.Events.TargetApproached, FiniteStateMachine.States.Idle );
-        fsm.SetStatePermit( FiniteStateMachine.States.UseSpell, FiniteStateMachine.Events.TargetLost, FiniteStateMachine.States.FollowSpellTarget );
+        fsm.SetStatePermit( FiniteStateMachine.States.UseSpell, FiniteStateMachine.Events.TargetLost, FiniteStateMachine.States.Idle );
         fsm.SetStatePermit( FiniteStateMachine.States.UseSpell, FiniteStateMachine.Events.Dead, FiniteStateMachine.States.Dead );
         fsm.SetStateExit( FiniteStateMachine.States.UseSpell, StopAttack );
 
@@ -131,8 +131,12 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
         Vector3 tempPos = spellTargetPosition;
         Influence tempInfluence;
-        if ( spellTarget != null ) {
-            tempPos = spellTarget.transform.position;
+
+        UnitViewPresenter tempSpellTarget = spellTarget;
+        spellTarget = null;
+        if ( tempSpellTarget != null ) {
+
+            tempPos = tempSpellTarget.transform.position;
 
             myViewPresenter.transform.LookAt( tempPos );
 
@@ -145,10 +149,16 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
             tempInfluence.timeEffect = spell.effect;
 
-            spellTarget.GetDamage( tempInfluence );
+            if ( tempSpellTarget.faction != myFaction ) {
+                tempSpellTarget.GetDamage( tempInfluence );
+                spell.cd = true;
+            } else {
+                fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
+                return;
+            }
 
-            spell.cd = true;
         } else {
+
             myViewPresenter.transform.LookAt( tempPos );
 
             animationController.AttackAnimation();
@@ -168,21 +178,24 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
             foreach ( var key in hit ) {
                 UnitViewPresenter uvp;
-
+               
                 if ( key.transform.GetComponent<UnitViewPresenter>() ) {
                     uvp = key.transform.GetComponent<UnitViewPresenter>();
 
                     if ( uvp.faction != myFaction ) {
                         uvp.GetDamage( tempInfluence );
                     }
+
                     spell.cd = true;
 
                 }
             }
         }
 
+        Spell tempSpell = spell;
+
         Action temp = () => {
-            spell.cd = false;
+            tempSpell.cd = false;
         };
 
         SceneManager.Instance.CoroutineManager.InvokeAttack( temp, spell.cdTime );

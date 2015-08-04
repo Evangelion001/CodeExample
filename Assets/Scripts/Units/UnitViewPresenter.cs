@@ -25,8 +25,9 @@ public class UnitViewPresenter : MonoBehaviour {
     }
 
     public void DeleteEffectParticle () {
-        Debug.Log( "okey: " + effectParticle.name );
-       Destroy( effectParticle );
+        if ( effectParticle != null ) {
+            Destroy( effectParticle );
+        }
     }
 
     public void AddSelectDelegate ( BaseUnitController.SelectUnit selectUnit ) {
