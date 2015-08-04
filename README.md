@@ -6,7 +6,7 @@ Add spell upgrade;
 Add Hot keys;
 Add change camera;
 Add Game finish state;
-//
+
 Fixs:
 Add main class;
 Remove player ref from view;
