@@ -29,8 +29,8 @@ public class BaseUnitController {
         BaseUnit.UnitCharacteristics unitCharacteristics, 
         EntityController.GetTarget getTarget, 
         EntityController.Faction faction, 
-        DeathDestroy updateDeath, 
-        BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
+        DeathDestroy updateDeath,
+        BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
 
         this.updateDeath = updateDeath;
 
@@ -42,8 +42,8 @@ public class BaseUnitController {
 
         this.entityControllerSelect = entityControllerSelect;
         unitBehaviour = new BaseUnitBehaviour( getTarget, faction, unitViewPresenter, animationController );
-        unitModel = new BaseUnit( "Unit", unitCharacteristics, faction, effectsController, _UpdateCharacteristics, UpdateDeath, setUpdeteCharacteristicsDelegate );
-        unitView = new BaseUnitView( unitViewPresenter, Selected, unitModel.GetDamage );
+        unitModel = new BaseUnit(unitCharacteristics, faction, effectsController, _UpdateCharacteristics, UpdateDeath, setUpdeteCharacteristicsDelegate, DeleteVisualEffect );
+        unitView = new BaseUnitView( unitViewPresenter, Selected, GetDamage );
     }
 
     protected virtual void Selected () {
@@ -69,7 +69,16 @@ public class BaseUnitController {
     }
 
     public void GetDamage (Influence influence ) {
+        if ( influence.timeEffect != null ) {
+            if(influence.timeEffect.visualPrefab != null)
+            unitView.SetEffectParticle( influence.timeEffect.visualPrefab );
+        }
+
         unitModel.GetDamage( influence );
+    }
+
+    public virtual void DeleteVisualEffect () {
+        unitView.DeleteEffectParticle();
     }
 
     protected void _UpdateCharacteristics (BaseUnit.UnitCharacteristics newCharacteristics, Influence influence ) {

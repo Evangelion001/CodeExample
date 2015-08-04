@@ -8,7 +8,7 @@ public class Player {
 
     private CenterUIView cuiv;
 
-    private BuildView buildView;
+    private BaraksModel baraksModel;
 
     public Player ( 
         Action<Action<UnitViewPresenter>> currentTargetSpell, 
@@ -50,18 +50,18 @@ public class Player {
 
     }
 
-    public void ShowBuildActionButtons ( BuildView buildView ) {
+    public void ShowBuildActionButtons ( BaraksModel baraksModel ) {
 
-        this.buildView = buildView;
+        this.baraksModel = baraksModel;
 
         cuiv.AddBuildActionButtons( BuildUpgrade );
     }
 
     public void BuildUpgrade () {
-        if ( Gold >= buildView.GetUpgradeCost() ) {
-            Gold = -buildView.GetUpgradeCost();
-            buildView.UpgradeBuilding();
-            ShowBuildDescription( buildView.buildLevel, buildView.spawnUnitType, buildView.baraksUnitConstructor[buildView.buildLevel].trainingTime, buildView.GetUpgradeCost() );
+        if ( Gold >= baraksModel.GetUpgradeCost() ) {
+            Gold = -baraksModel.GetUpgradeCost();
+            baraksModel.UpgradeBuilding();
+            ShowBuildDescription( baraksModel.buildLevel, baraksModel.spawnUnitType, baraksModel.baraksUnitConstructor[baraksModel.buildLevel].trainingTime, baraksModel.GetUpgradeCost() );
         } else {
             Debug.Log( "Need more gold" );
         }

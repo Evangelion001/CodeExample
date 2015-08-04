@@ -98,11 +98,13 @@ public class BaseUnitBehaviour {
     }
 
     public virtual void SetPlayerTarget ( UnitViewPresenter unitViewPresenter ) {
-        playerTarget = unitViewPresenter;
-        fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
-        if ( playerTarget != targetViewPresenter ) {
-            HideTarget();
-        }    
+        if ( unitViewPresenter != playerTarget ) {
+            playerTarget = unitViewPresenter;
+            fsm.CallEvent( FiniteStateMachine.Events.TargetFound );
+            if ( playerTarget != targetViewPresenter ) {
+                HideTarget();
+            }
+        }
     }
 
     public virtual void UpdateFindTarget () {

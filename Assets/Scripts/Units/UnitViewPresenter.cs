@@ -14,6 +14,21 @@ public class UnitViewPresenter : MonoBehaviour {
     private BaseUnit.DamageDelegate damageDelegate;
     private Player player;
 
+    private GameObject effectParticle;
+
+    public void SetEffectParticle (GameObject effectParticle ) {
+        GameObject temp = Instantiate( effectParticle );
+        this.effectParticle = temp;
+        this.effectParticle.transform.position = Vector3.zero;
+        this.effectParticle.transform.SetParent( transform, false );
+        this.effectParticle.GetComponent<ParticleSystem>().Play();
+    }
+
+    public void DeleteEffectParticle () {
+        Debug.Log( "okey: " + effectParticle.name );
+       Destroy( effectParticle );
+    }
+
     public void AddSelectDelegate ( BaseUnitController.SelectUnit selectUnit ) {
         this.selectUnit = selectUnit;
     }
@@ -45,11 +60,11 @@ public class UnitViewPresenter : MonoBehaviour {
     public void GetDamage (Influence influence ) {
         damageDelegate( influence );
     }
-
+    //FIXME Remove 
     public void GetPlayer (Player player) {
         this.player = player;
     }
-
+    //FIXME Remove 
     public void GetGold (int gold) {
         //FIXME rename method
         player.Gold = gold;

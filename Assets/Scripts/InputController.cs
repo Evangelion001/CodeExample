@@ -17,6 +17,12 @@ public class InputController :MonoBehaviour {
 
     public Cursor cursor;
 
+    public UnitViewPresenter redMainTarget;
+
+    public GameObject blueMainPosition;
+
+    public BuildViewPresenter buildViewPresenter;
+
     public enum CursorsType {
         Simple,
         TargetSpell,
@@ -55,9 +61,8 @@ public class InputController :MonoBehaviour {
     }
 
     void Start () {
-
         player = new Player( SetCurrentTargetSpell, SetCurrentPositionSpell, SetCursor );
-        entityController = new EntityController( player );
+        entityController = new EntityController( player, redMainTarget, blueMainPosition.gameObject.transform.position, buildViewPresenter );
         gameStateController = new GameStateController( entityController, _UpdateWaveTimer );
 
     }
@@ -95,18 +100,18 @@ public class InputController :MonoBehaviour {
                 switch ( key.transform.gameObject.tag ) {
                     case "Build":
                         if ( cursorsType == CursorsType.Simple ) {
-                            BuildView temp = key.transform.gameObject.GetComponent<BuildView>();
+                            Deselect();
+                            BaraksModel temp = key.transform.gameObject.GetComponent<BaraksModel>();
                             player.ShowBuildActionButtons( temp );
                             player.ShowBuildDescription( temp.buildLevel, temp.spawnUnitType, temp.baraksUnitConstructor[temp.buildLevel].trainingTime, temp.GetUpgradeCost() );
                             cursor.SetMoveCursor();
                         }
-                        break;
+                        return;
                     case "Unit":
                         if ( cursorsType == CursorsType.TargetSpell ) {
-                            if ( currentTargetSpell == null ) {
-                            }
                             currentTargetSpell( key.transform.gameObject.GetComponent<UnitViewPresenter>() );
                         } else if( cursorsType == CursorsType.Simple ) {
+                            Deselect();
                             UnitViewPresenter[] temp = new UnitViewPresenter[1];
                             temp[0] = key.transform.gameObject.GetComponent<UnitViewPresenter>();
                             GetSelectableUnits( temp );
@@ -129,22 +134,26 @@ public class InputController :MonoBehaviour {
     private void SetTargetByClick () {
 
         Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
-        RaycastHit hit;
+        RaycastHit[] hit;
 
-        if ( Physics.Raycast( ray, out hit ) ) {
+        if ( ( hit = Physics.RaycastAll( ray, Mathf.Infinity ) ).Length > 0 ) {
 
-            switch ( hit.transform.gameObject.tag ) {
-                case "Ground":
-                    entityController.MoveToPosition( hit.point );
-                    cursor.SetMoveCursor();
-                    break;
-                case "Unit":
-                    if ( entityController.isSelected() ) {
-                        entityController.SetTarget( hit.transform.gameObject.GetComponent<UnitViewPresenter>() );
-                        cursor.SetAttackCursor();
-                    }
-                    break;
+            foreach ( var key in hit ) {
+
+                switch ( key.transform.gameObject.tag ) {
+                    case "Ground":
+                        entityController.MoveToPosition( key.point );
+                        cursor.SetMoveCursor();
+                        return;
+                    case "Unit":
+                        if ( entityController.isSelected() ) {
+                            entityController.SetTarget( key.transform.gameObject.GetComponent<UnitViewPresenter>() );
+                            cursor.SetAttackCursor();
+                        }
+                        return;
+                }
             }
+            
         }
     }
 

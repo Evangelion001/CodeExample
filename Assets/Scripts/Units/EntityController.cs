@@ -5,6 +5,9 @@ public class EntityController {
 
     public delegate bool Select ( BaseUnitController selectedUnit, Faction faction );
 
+    private UnitViewPresenter redMainTarget;
+    private Vector3 blueMainPosition;
+
     //FIXME move to entityController (model)
     public enum Faction {
         Blue,
@@ -22,19 +25,33 @@ public class EntityController {
 
         List<BaseUnitController> tempBaseUnitControllers = new List<BaseUnitController>();
 
+        BaseUnitController tempBaseUnitController;
+
         if ( myFaction == Faction.Blue ) {
             tempBaseUnitControllers = unitsControllersRed;
+            tempBaseUnitController = unitsControllersBlue.Find( x => x.GetUnitViewPresenter() == unit );
         } else {
             tempBaseUnitControllers = unitsControllersBlue;
+            tempBaseUnitController = unitsControllersRed.Find( x => x.GetUnitViewPresenter() == unit );
         }
 
         foreach ( var key in tempBaseUnitControllers ) {
             if ( !key.GetInvulnerability() ) {
+
                 float tempDistance = Vector3.Distance( key.GetUnitViewPresenter().transform.position, unit.transform.position );
+
                 if ( resUnitViewPresenter == null || tempDistance < distance ) {
                     resUnitViewPresenter = key.GetUnitViewPresenter();
                     distance = tempDistance;
                 }
+            }
+        }
+
+        if ( resUnitViewPresenter == null ) {
+            if ( myFaction == Faction.Blue ) {
+                tempBaseUnitController.MoveToPosition( blueMainPosition );
+            } else {
+                return redMainTarget;
             }
         }
 
@@ -48,20 +65,25 @@ public class EntityController {
     private List<BaseUnitController> unitsControllersSelectedBlue;
 
     Player player;
+    BuildController buildController;
+    BuildViewPresenter buildViewPresenter;
 
-    public EntityController ( Player player) {
+    public EntityController ( Player player, UnitViewPresenter redMainTarget, Vector3 blueMainPosition, BuildViewPresenter buildViewPresenter ) {
+        this.redMainTarget = redMainTarget;
+        this.blueMainPosition = blueMainPosition;
         unitsControllersBlue = new List<BaseUnitController>();
         unitsControllersRed = new List<BaseUnitController>();
         unitsControllersSelectedRed = new List<BaseUnitController>();
         unitsControllersSelectedBlue = new List<BaseUnitController>();
         this.player = player;
+        this.buildViewPresenter = buildViewPresenter;
     }
 
     private void _HeroResurrect (HeroUnitController heroUnitController ) {
         unitsControllersBlue.Add( heroUnitController );
     }
 
-    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction, BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
+    public void CreateUnit ( UnitViewPresenter unitViewPresenter, BaseUnit.UnitCharacteristics unitCharacteristics, Faction faction, BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
 
         unitViewPresenter.faction = faction;
 
@@ -71,6 +93,7 @@ public class EntityController {
 
         if ( unitViewPresenter.unitType == BaseUnit.UnitType.hero ) {
             unitController = new HeroUnitController( SelectUnit, (HeroViewPresentor)unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit, _HeroResurrect, setUpdeteCharacteristicsDelegate );
+            buildController = new BuildController( SelectUnit, buildViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit, setUpdeteCharacteristicsDelegate );
         } else {
             unitController = new BaseUnitController( SelectUnit, unitViewPresenter, unitCharacteristics, GetUnitTarget, faction, DestroyUnit, setUpdeteCharacteristicsDelegate );
         }
@@ -106,6 +129,7 @@ public class EntityController {
         if ( unitsControllersBlue.Contains( unitController ) ) {
             unitsControllersBlue.Remove( unitController );
         }
+
         if ( unitsControllersRed.Contains( unitController ) ) {
             unitsControllersRed.Remove( unitController );
         }

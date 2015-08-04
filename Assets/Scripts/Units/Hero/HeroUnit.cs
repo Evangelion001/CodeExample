@@ -21,7 +21,13 @@ public class HeroUnit : BaseUnit {
         BaseUnitController.UpdateCharacteristics updateCharacteristics, 
         BaseUnitController.Death updateDeath, 
         HeroUnitController.LevelUpEffectDelegate 
-        levelUpEffect, BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) : base( name, characteristics, faction, effectsController, updateCharacteristics, updateDeath, setUpdeteCharacteristicsDelegate ) {
+        levelUpEffect, BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate, Action deleteVisualEffect ) : base( 
+            characteristics, 
+            faction, 
+            effectsController, 
+            updateCharacteristics, 
+            updateDeath, 
+            setUpdeteCharacteristicsDelegate, deleteVisualEffect ) {
 
         this.spells = spells;
         this.levelUpEffect = levelUpEffect;

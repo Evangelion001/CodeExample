@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class HeroBehaviour : BaseUnitBehaviour {
@@ -123,29 +124,68 @@ public class HeroBehaviour : BaseUnitBehaviour {
 
     private void ActivateSpell () {
 
-        if ( spellWithTarget && spellTarget == null || Vector3.Distance( spellTarget.transform.position, myViewPresenter.transform.position ) > spell.attackRange ) {
+        if ( (spellWithTarget && spellTarget == null) || (spellTarget != null && Vector3.Distance( spellTarget.transform.position, myViewPresenter.transform.position ) > spell.attackRange) ) {
             fsm.CallEvent( FiniteStateMachine.Events.TargetLost );
             return;
         }
 
         Vector3 tempPos = spellTargetPosition;
-
+        Influence tempInfluence;
         if ( spellTarget != null ) {
             tempPos = spellTarget.transform.position;
+
+            myViewPresenter.transform.LookAt( tempPos );
+
+            animationController.AttackAnimation();
+
+            tempInfluence = new Influence();
+            tempInfluence.damage = 50;
+            tempInfluence.healing = 0;
+            tempInfluence.owner = myViewPresenter;
+
+            tempInfluence.timeEffect = spell.effect;
+
+            spellTarget.GetDamage( tempInfluence );
+
+            spell.cd = true;
+        } else {
+            myViewPresenter.transform.LookAt( tempPos );
+
+            animationController.AttackAnimation();
+
+            tempInfluence = new Influence();
+            tempInfluence.damage = 25;
+            tempInfluence.healing = 0;
+            tempInfluence.owner = myViewPresenter;
+
+            tempInfluence.timeEffect = null;
+            RaycastHit[] hit;
+            hit = Physics.SphereCastAll( tempPos, spell.aoeRadius, Vector3.forward);
+
+           GameObject tempEffect = (GameObject) GameObject.Instantiate( spell.effect.visualPrefab, tempPos + new Vector3( 0, 5.5f, 0 ), spell.effect.visualPrefab.transform.rotation);
+
+            tempEffect.GetComponent<ParticleSystem>().Play();
+
+            foreach ( var key in hit ) {
+                UnitViewPresenter uvp;
+
+                if ( key.transform.GetComponent<UnitViewPresenter>() ) {
+                    uvp = key.transform.GetComponent<UnitViewPresenter>();
+
+                    if ( uvp.faction != myFaction ) {
+                        uvp.GetDamage( tempInfluence );
+                    }
+                    spell.cd = true;
+
+                }
+            }
         }
 
-        myViewPresenter.transform.LookAt( tempPos );
+        Action temp = () => {
+            spell.cd = false;
+        };
 
-        animationController.AttackAnimation();
-
-        Influence temp = new Influence();
-        temp.damage = 0;
-        temp.healing = 0;
-        temp.owner = myViewPresenter;
-
-        temp.timeEffect = spell.effect;
-
-        spellTarget.GetDamage( temp );
+        SceneManager.Instance.CoroutineManager.InvokeAttack( temp, spell.cdTime );
 
         fsm.CallEvent( FiniteStateMachine.Events.TargetApproached );
     }

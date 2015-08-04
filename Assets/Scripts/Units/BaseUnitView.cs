@@ -23,4 +23,12 @@ public class BaseUnitView {
         unitViewPresenter.AddDamageDelegate( damageDelegate );
     }
 
+    public void SetEffectParticle ( GameObject effectParticle ) {
+        unitViewPresenter.SetEffectParticle( effectParticle );
+    }
+
+    public void DeleteEffectParticle () {
+        unitViewPresenter.DeleteEffectParticle();
+    }
+
 }

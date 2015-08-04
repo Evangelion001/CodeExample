@@ -85,7 +85,9 @@ using System;
         List<GameObject> selectableList = new List<GameObject>();
 
         foreach ( var key in behavioursToGetSelectionsFrom ) {
-            selectableList.Add( key.gameObject );
+            if ( key.GetComponent<BuildViewPresenter>() == null ) {
+                selectableList.Add( key.gameObject );
+            }
         }
 
         selectables = selectableList.ToArray();

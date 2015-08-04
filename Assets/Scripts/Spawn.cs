@@ -43,7 +43,7 @@ public class Spawn {
         return resPrefabs;
     }
 
-    public void CreateUnitByType ( BaseUnit.UnitType unitType, Vector3 spawnPosition, BaseUnit.UnitCharacteristics characteristics, EntityController.Faction faction, BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
+    public void CreateUnitByType ( BaseUnit.UnitType unitType, Vector3 spawnPosition, BaseUnit.UnitCharacteristics characteristics, EntityController.Faction faction, BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
 
         GameObject tempUnit = (GameObject)GameObject.Instantiate( GetPrefabByType( unitType ), spawnPosition, new Quaternion(0,0,0,0) );
 

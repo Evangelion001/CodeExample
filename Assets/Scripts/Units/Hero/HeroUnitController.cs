@@ -14,27 +14,30 @@ public class HeroUnitController : BaseUnitController {
         EntityController.GetTarget getTarget,
         EntityController.Faction faction,
         DeathDestroy updateDeath, 
-        EntityController.HeroResurrect heroResurrect, 
-        BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) :base ( entityControllerSelect, unitViewPresenter, unitCharacteristics, getTarget, faction, updateDeath, setUpdeteCharacteristicsDelegate ) {
+        EntityController.HeroResurrect heroResurrect,
+        BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) :base ( 
+            entityControllerSelect, unitViewPresenter, unitCharacteristics, getTarget, faction, updateDeath, setUpdeteCharacteristicsDelegate ) {
 
         this.updateDeath = updateDeath;
         EffectsController effectsController = new EffectsController();
         this.heroResurrect = heroResurrect;
         unitBehaviour.CallDeathFSMEvent();
         unitBehaviour = new HeroBehaviour( getTarget, faction, unitViewPresenter, animationController );
-        unitModel = new HeroUnit( "Unit", unitCharacteristics, SpellInit( effectsController ), faction, effectsController, _UpdateCharacteristics, UpdateDeath, LevelUpEffect, setUpdeteCharacteristicsDelegate );
-        unitView = new HeroView( unitViewPresenter, Selected, unitModel.GetDamage, ((HeroUnit)unitModel).GetXp );
+        unitModel = new HeroUnit( "Unit", unitCharacteristics, SpellInit( effectsController ), faction, effectsController, _UpdateCharacteristics, UpdateDeath, LevelUpEffect, setUpdeteCharacteristicsDelegate, DeleteVisualEffect );
+        unitView = new HeroView( unitViewPresenter, Selected, GetDamage, ((HeroUnit)unitModel).GetXp );
 
     }
 
     private Spell[] SpellInit ( EffectsController effectsController ) {
 
         GameObject freezeEffect = (GameObject)Resources.Load( "Prefabs/Particles/Freeze" );
+        GameObject meteorShawer = (GameObject)Resources.Load( "Prefabs/Particles/MeteorShower" );
 
         Spell[] spells = new Spell[2];
         spells[0] = new Spell();
 
         TimeEffect effect = new TimeEffect( effectsController );
+        effect.name = "Freeze";
         effect.characteristicsModifiers.attackSpeed = 0.1f;
         effect.characteristicsModifiers.speed = 0.1f;
         effect.visualPrefab = freezeEffect;
@@ -46,14 +49,23 @@ public class HeroUnitController : BaseUnitController {
         spells[0].healing = 0;
         spells[0].needTarget = true;
         spells[0].effect = effect;
+        spells[0].cdTime = 5;
+        spells[0].cd = false;
+
+        TimeEffect effect2 = new TimeEffect( effectsController );
+        effect2.name = "MeteorShawer";
+        effect2.visualPrefab = meteorShawer;
+        effect2.duration = 0;
 
         spells[1] = new Spell();
-        spells[1].aoeRadius = 0;
+        spells[1].aoeRadius = 10;
         spells[1].attackRange = 10;
-        spells[1].damage = 15;
+        spells[1].damage = 50;
         spells[1].healing = 0;
         spells[1].needTarget = false;
-        spells[1].effect = effect;
+        spells[1].effect = effect2;
+        spells[1].cdTime = 5;
+        spells[1].cd = false;
 
         return spells;
     }

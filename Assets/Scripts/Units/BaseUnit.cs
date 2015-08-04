@@ -14,7 +14,8 @@ public class BaseUnit : IUnit {
     public delegate void DamageDelegate ( Influence damage );
     public delegate Influence GetInfluenceDelegate ();
     public delegate void UpdateBaseUnitCharacteristics ( UnitCharacteristics unitCharacteristics );
-
+    protected BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate;
+    protected Action deleteVisualEffect;
     [Serializable]
     public class UnitCharacteristics {
         [SerializeField]
@@ -57,7 +58,6 @@ public class BaseUnit : IUnit {
         }
     }
 
-    private string name;
     protected int currentHp;
     protected EntityController.Faction faction;
     protected UnitCharacteristics baseCharacteristics = new UnitCharacteristics();
@@ -90,16 +90,9 @@ public class BaseUnit : IUnit {
         return faction;
     }
 
-    public virtual string Name {
-       get {
-            return name;
-       }
-       set {
-            name = value;
-       }
-    }
-
     private void RemoveEffect ( TimeEffect effect ) {
+        Debug.Log( "RemoveEffect:" + effect.name );
+        deleteVisualEffect();
         currentEffects.Remove( effect );
         UpdateAppliedEffects();
         Debug.Log( "baseCharacteristics.speed: " + baseCharacteristics.speed + " currentCharacteristics.speed: " + currentCharacteristics.speed );
@@ -149,6 +142,7 @@ public class BaseUnit : IUnit {
             if ( currentHp <= 0 ) {
                 currentHp = 0;
                 if ( influence.owner.unitType == UnitType.hero ) {
+                    //FIXME GetGold to EntityController
                     influence.owner.GetGold( gold );
                     ((HeroViewPresentor)influence.owner).GetXP( xp );
                 }
@@ -186,21 +180,20 @@ public class BaseUnit : IUnit {
         UpdateAppliedEffects();
     }
 
-    private BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate;
+
 
     public BaseUnit ( 
-        string name, 
         UnitCharacteristics characteristics, 
         EntityController.Faction faction, 
         EffectsController effectsController, 
         BaseUnitController.UpdateCharacteristics updateCharacteristics, 
         BaseUnitController.Death updateDeath,
-        BuildView.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate ) {
+        BaraksModel.SetUpdeteCharacteristicsDelegate setUpdeteCharacteristicsDelegate, Action deleteVisualEffect ) {
+        this.deleteVisualEffect = deleteVisualEffect;
         this.setUpdeteCharacteristicsDelegate = setUpdeteCharacteristicsDelegate;
         setUpdeteCharacteristicsDelegate( UpdateBaseCharacteristics, false );
         updateCharacteristicsDelegate = updateCharacteristics;
         this.updateDeath = updateDeath;
-        this.name = name;
         baseCharacteristics = characteristics;
         currentHp = baseCharacteristics.hp;
         this.faction = faction;

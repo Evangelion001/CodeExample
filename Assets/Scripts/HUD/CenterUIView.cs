@@ -98,7 +98,7 @@ public class CenterUIView {
         uiViewPresenter.BaraksPanel.SetActive( false );
     }
 
-    public void AddBuildActionButtons ( BuildView.UpgradeBuildingDelegate upgradeBuildingDelegate ) {
+    public void AddBuildActionButtons ( BaraksModel.UpgradeBuildingDelegate upgradeBuildingDelegate ) {
         actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.RemoveAllListeners();
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.upgradeIcon;
@@ -112,51 +112,54 @@ public class CenterUIView {
     private  Action<Action<Vector3>> currentPositionSpell;
 
     public void AddHeroActionButton ( HeroUnit.ActionSpell actionSpell ) {
+
         Debug.Log( "init: " + actionSpell.spells[0].attackRange);
         //FIXME add buttons for each spells
         actionButtonCounter = 0;
-        actionButtonArray[0].SetActive( true );
-        actionButtonArray[0].GetComponent<Image>().sprite = uiViewPresenter.iceBoltIcon;
-        actionButtonArray[0].GetComponent<Button>().onClick.RemoveAllListeners();
-        actionButtonArray[0].GetComponent<Button>().onClick.AddListener( () => {
+        actionButtonArray[actionButtonCounter].SetActive( true );
+        actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.iceBoltIcon;
+        if ( !actionSpell.spells[0].cd )
+            actionButtonArray[actionButtonCounter].GetComponent<Image>().color = Color.white;
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.RemoveAllListeners();
+        actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.AddListener( () => {
             int idx = 0;
-            if ( actionSpell.spells[0].needTarget ) {
-                Debug.Log( "Ok3" );
+
+            if (!actionSpell.spells[idx].cd ) {
+
                 cursorAction( InputController.CursorsType.TargetSpell );
-                //currentTargetSpell -= currentTargetSpell;
+
                 Action<UnitViewPresenter> currentTargetSpell = x => {
                     actionSpell.targetSpell( actionSpell.spells[idx], x );
+                    cursorAction( InputController.CursorsType.Simple );
+                    actionButtonArray[idx].GetComponent<Image>().color = Color.gray;
                 };
 
                 this.currentTargetSpell( currentTargetSpell );
-            } else {
-                cursorAction( InputController.CursorsType.PositionSpell );
-                //currentPositionSpell -= currentPositionSpell;
-                Action<Vector3> currentPositionSpell = x => {
-                    actionSpell.positionSpell( actionSpell.spells[idx], x );
-                };
             }
+
+            
         }); 
 
         ++actionButtonCounter;
+        Debug.Log( "init: " + actionSpell.spells[1].effect.name );
         actionButtonArray[actionButtonCounter].SetActive( true );
         actionButtonArray[actionButtonCounter].GetComponent<Image>().sprite = uiViewPresenter.meteorShawerIcon;
+        if ( !actionSpell.spells[1].cd )
+            actionButtonArray[actionButtonCounter].GetComponent<Image>().color = Color.white;
         actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.RemoveAllListeners();
         actionButtonArray[actionButtonCounter].GetComponent<Button>().onClick.AddListener( () => {
             int idx = 1;
-            //if ( actionSpell.spells[idx].needTarget ) {
-            //    cursorAction( InputController.CursorsType.TargetSpell );
-            //    currentTargetSpell -= currentTargetSpell;
-            //    currentTargetSpell += x => {
-            //        actionSpell.targetSpell( actionSpell.spells[idx], x );
-            //    };
-            //} else {
-            //    cursorAction( InputController.CursorsType.PositionSpell );
-            //    currentPositionSpell -= currentPositionSpell;
-            //    currentPositionSpell += x => {
-            //        actionSpell.positionSpell( actionSpell.spells[idx], x );
-            //    };
-            //}
+            if ( !actionSpell.spells[idx].cd ) {
+                cursorAction( InputController.CursorsType.PositionSpell );
+
+                Action<Vector3> currentPositionSpell = x => {
+                    actionSpell.positionSpell( actionSpell.spells[idx], x );
+                    cursorAction( InputController.CursorsType.Simple );
+                    actionButtonArray[idx].GetComponent<Image>().color = Color.gray;
+                };
+
+                this.currentPositionSpell( currentPositionSpell );
+            }
         } );
         ++actionButtonCounter;
         actionButtonArray[actionButtonCounter].SetActive( true );

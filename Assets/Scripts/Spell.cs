@@ -17,4 +17,8 @@ public class Spell {
     public TimeEffect effect = null;
     [SerializeField]
     public GameObject visualPrefab = null;
+    [SerializeField]
+    public float cdTime = 0;
+    [SerializeField]
+    public bool cd = false;
 }

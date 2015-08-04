@@ -63,14 +63,17 @@
      <Compile Include="Assets\Lib\Stateless\TriggerBehaviour.cs" />
      <Compile Include="Assets\Lib\Stateless\TriggerWithParameters.cs" />
      <Compile Include="Assets\Scripts\BoxSelectror.cs" />
+     <Compile Include="Assets\Scripts\Buildings\BaraksModel.cs" />
+     <Compile Include="Assets\Scripts\Buildings\BuildBehaviour.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildController.cs" />
-     <Compile Include="Assets\Scripts\Buildings\BuildModel.cs" />
+     <Compile Include="Assets\Scripts\Buildings\BuildUnit.cs" />
      <Compile Include="Assets\Scripts\Buildings\BuildView.cs" />
      <Compile Include="Assets\Scripts\CameraMotion.cs" />
      <Compile Include="Assets\Scripts\CoroutineManager.cs" />
      <Compile Include="Assets\Scripts\CreepAI.cs" />
      <Compile Include="Assets\Scripts\Cursor.cs" />
      <Compile Include="Assets\Scripts\Effect.cs" />
+     <Compile Include="Assets\Scripts\EffectsArea.cs" />
      <Compile Include="Assets\Scripts\EffectsConstructor.cs" />
      <Compile Include="Assets\Scripts\FiniteStateMachine.cs" />
      <Compile Include="Assets\Scripts\GameStateController.cs" />
@@ -92,6 +95,7 @@
      <Compile Include="Assets\Scripts\Units\BaseUnitBehaviour.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitController.cs" />
      <Compile Include="Assets\Scripts\Units\BaseUnitView.cs" />
+     <Compile Include="Assets\Scripts\Units\BuildViewPresenter.cs" />
      <Compile Include="Assets\Scripts\Units\EffectsController.cs" />
      <Compile Include="Assets\Scripts\Units\EntityController.cs" />
      <Compile Include="Assets\Scripts\Units\Hero\HeroBehaviour.cs" />
@@ -104,6 +108,7 @@
      <Compile Include="Assets\SelectionBox\Code\UnityEngine.UI.Extensions NameSpace\SelectionBox.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnly.cs" />
      <Compile Include="Assets\UnityEditor\ReadOnlyAttribute.cs" />
+     <None Include="Assets\KY_effects\MagicEffectsPackFree\ReadMe.txt" />
      <None Include="Assets\Resources\SkeletonData\animations.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
