@@ -1,11 +1,11 @@
 # CodeExample
 TODO:
-Add HeroIcon;
 Add Resurrection timer;
 Add spell upgrade;
 Add Hot keys;
-Add change camera;
 Add Game finish state;
+Add upgrage Waves
+Add Recruiting timer
 
 Fixs:
 Add main class;
